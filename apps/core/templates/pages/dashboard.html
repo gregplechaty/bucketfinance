@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    My Site - Dashboard placeholder
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h2>Hello {{ user.username }}</h2>
+        <a class="btn btn-primary btn-lg" href="/dashboard/buckets" role="button">Create Bucket</a>
+        <a class="btn btn-primary btn-lg" href="/dashboard/{{ user.id }}/expenses" role="button">Add Expense</a>
+    </div>
+  </div>
+
+{% for bucket in buckets %}
+<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Link with href
+</a>
+ <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+    </div>
+</div>
+{% endfor %}
+
+
+{% endblock content %}
+
+
