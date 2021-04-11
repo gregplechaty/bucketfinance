@@ -30,12 +30,12 @@
           </div>
           <div class="col-2">
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
             Delete Bucket
           </button>
-        </div>
+        
           <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="exampleModal{{ bucket.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -49,11 +49,12 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary">Delete Bucket changes</button>
+                  <a class="btn btn-primary" href="/dashboard/buckets/delete/{{ bucket.id }}/" role="button">Delete Bucket changes</a>
                 </div>
               </div>
             </div>
           </div>
+        </div>
         </p>
         </div>
         <div>
