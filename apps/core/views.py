@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
 from apps.accounts.models import User
 from apps.core.models import Bucket
 from apps.core.forms import AddBucket
@@ -23,7 +24,6 @@ def about(request):
 def dashboard(request, user_id):
     print('------------view: dashboard, user:', request.user)
     buckets = Bucket.objects.filter(userID=request.user)
-    print(buckets)
     #if readinglist.creator_user != request.user:
     #    raise SuspiciousOperation("Attempted to access different user's dashboard")
     context = {
@@ -35,24 +35,40 @@ def dashboard(request, user_id):
 
 @login_required
 def create_bucket(request):
-    print('------------view: manage_buckets, user:', request.user)
+    print('------------view: create_bucket')
     if request.method == 'POST':
-        # Create a form instance and populate it with data from the request
         form = AddBucket(request.POST)
         if form.is_valid():
-            # C in CRUD --- CREATE reading list in database
             bucket = form.save(commit=False)
             bucket.userID = request.user
-            print('----printing user_id:', bucket.userID)
             bucket.save()
-            
-            return render(request, 'pages/dashboard.html')
+            context = {
+                'buckets': Bucket.objects.filter(userID=request.user),
+                'user': request.user,
+            }
+            return render(request, 'pages/dashboard.html', context)
     else:
-        # if a GET  we'll create a blank form
         form = AddBucket()
+    context = {
+        'form': form,
+        'user': request.user,
+    }
+    return render(request, 'pages/form_page.html', context)
 
+@login_required
+def edit_bucket(request, user_id, bucket_id):
+    print('------------view: edit_bucket:', bucket_id)
+    bucket_to_modify = Bucket.objects.get(id=bucket_id)
+    Bucket.objects.filter(userID=request.user)
+    if request.method == 'POST':
+        form = AddBucket(request.POST, instance=bucket_to_modify)
+        if form.is_valid():
+            bucket_to_modify = form.save()
+            return redirect('/dashboard/' + user_id)
+    else:
+        bucket_to_modify = Bucket.objects.get(id = bucket_id)
+        form = AddBucket(instance=bucket_to_modify)
     context = {
         'form': form,
     }
     return render(request, 'pages/form_page.html', context)
-
