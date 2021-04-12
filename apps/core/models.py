@@ -24,6 +24,7 @@ class Transaction(models.Model):
         on_delete=models.CASCADE,
     )
     amount = models.DecimalField(max_digits=15, decimal_places=2)
+    transactionDate = models.DateTimeField()
     description = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True) # Add current date
     lastModified = models.DateTimeField(auto_now=True)

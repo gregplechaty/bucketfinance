@@ -1,11 +1,14 @@
 import datetime
 from django.shortcuts import render, redirect
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import SuspiciousOperation
+
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction
 from apps.core.forms import AddBucket, AddTransaction
+
 
 def home(request):
     context = {
@@ -23,12 +26,11 @@ def about(request):
 @login_required
 def dashboard(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
-    transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True)
-    print('valid transactions:', transactions)
+    transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('transactionDate')
     context = {
         'user': request.user,
         'buckets': buckets,
-        'transactions': transactions
+        'transactions': transactions,
     }
     return render(request, 'pages/dashboard.html', context)
 

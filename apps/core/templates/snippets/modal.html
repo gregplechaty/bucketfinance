@@ -1,0 +1,23 @@
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal{{ bucket.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete {{ bucket.bucketName }}? This will remove all corresponding transactions associated.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="/dashboard/buckets/delete/{{ bucket.id }}/" role="button">Delete Bucket changes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content %}

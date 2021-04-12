@@ -24,7 +24,7 @@
       <div class="card card-body">
         <div class="row">
           <div class="col-8">
-            <p>Total Funds: PLACEHOLDER $9000</p>
+            <p>Total Funds: $PLACEHOLDER: TO DO</p>
             <p>{{ bucket.bucketDescription }}</p>
           </div>
           <!-- Button trigger modal -->
@@ -38,37 +38,16 @@
               Delete Bucket
             </button>
           </div>
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal{{ bucket.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to delete {{ bucket.bucketName }}? This will remove all corresponding transactions associated.
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <a class="btn btn-primary" href="/dashboard/buckets/delete/{{ bucket.id }}/" role="button">Delete Bucket changes</a>
-                </div>
-              </div>
-            </div>
-          </div>
+          {% include "snippets/modal.html" %}
         </div>
         </p>
         </div>
         <div class="row my-2">
           <a class="btn btn-primary col-8 my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
           <div class="col-12 my-2">
-            {% for transaction in transactions %}
-              {% if transaction.bucket.id == bucket.id %}
-                <p>${{ transaction.amount }}: {{ transaction.description }}<a href="/dashboard/transaction/edit/{{ transaction.id }}/" class="btn btn-outline-primary"> ✏️ </a><a class="btn btn-danger" href="/dashboard/transaction/delete/{{ transaction.id }}/">Delete</a></p></p>
-              {% endif %}
-            {% endfor %}
+
+            {% include "snippets/transactions.html" %}
+            
           </div>
 
         </div>

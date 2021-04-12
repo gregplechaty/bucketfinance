@@ -1,0 +1,26 @@
+{% block content %}
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Description</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+            {% if transaction.bucket.id == bucket.id %}
+                <tr>
+                    <td>{{ transaction.transactionDate }}</td>
+                    <td>${{ transaction.amount }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td><a href="/dashboard/transaction/edit/{{ transaction.id }}/" class="btn btn-outline-primary"> ✏️ </a></td>
+                    <td><a class="btn btn-danger" href="/dashboard/transaction/delete/{{ transaction.id }}/">Delete</a></td>
+                </tr>
+            {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

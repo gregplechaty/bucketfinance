@@ -12,4 +12,4 @@ class AddBucket(forms.ModelForm):
 class AddTransaction(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['amount', 'description']
+        fields = ['amount', 'transactionDate', 'description']
