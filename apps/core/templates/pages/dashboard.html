@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    My Site - Dashboard placeholder
+    Bucket Finance: Dashboard
 {% endblock title %}
 
 
@@ -17,23 +17,27 @@
       </div>
   </div>
 {% for bucket in buckets %}
-  <div class="row">
+  <div class="row my-2">
     <div class="col-md">
-      <a class="btn btn-primary" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">{{ bucket.bucketName }}  <span style='font-size:40px;'>↓</span></a>
+      <a class="btn btn-success" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">{{ bucket.bucketName }}  <span style='font-size:40px;'>↓</span></a>
     <div class="collapse" id="bucket{{bucket.id}}">
       <div class="card card-body">
         <div class="row">
-          <p class="col-8">Total Funds: PLACEHOLDER $9000</p>
-          <!-- Button trigger modal -->
-          <div class="col-2">
-            <a class="btn btn-primary btn-lg" href="buckets/edit/{{ bucket.id }}/" role="button">Edit Bucket</a>
+          <div class="col-8">
+            <p>Total Funds: PLACEHOLDER $9000</p>
+            <p>{{ bucket.bucketDescription }}</p>
           </div>
-          <div class="col-2">
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
-            Delete Bucket
-          </button>
-        
+          <div class="col-4">
+            <div class="col-12 my-2">
+              <a class="btn btn-success btn-lg" href="buckets/edit/{{ bucket.id }}/" role="button">Edit Bucket</a>
+            </div>
+            <div class="col-12 my-2">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
+              Delete Bucket
+            </button>
+          </div>
           <!-- Modal -->
           <div class="modal fade" id="exampleModal{{ bucket.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -57,8 +61,16 @@
         </div>
         </p>
         </div>
-        <div>
-          <p>Recent transactions to go below here</p>
+        <div class="row my-2">
+          <a class="btn btn-primary col-8 my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
+          <div class="col-12 my-2">
+            {% for transaction in transactions %}
+              {% if transaction.bucket.id == bucket.id %}
+                <p>${{ transaction.amount }}: {{ transaction.description }}<a href="/dashboard/transaction/edit/{{ transaction.id }}/" class="btn btn-outline-primary"> ✏️ </a><a class="btn btn-danger" href="/dashboard/transaction/delete/{{ transaction.id }}/">Delete</a></p></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+
         </div>
       </div>
     </div>
