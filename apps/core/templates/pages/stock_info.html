@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}
+    Bucket Finance: Stock Information
+{% endblock title %}
+{% block content %}
+
+
+<h1>Stock Information</h1>
+<h3>Find out the latest stock performance of the biggest companies!</h3>
+<form method="GET">
+  <label for="fname">Stock Symbol:</label><br>
+  <input type="text" id="stock_symbol" name="stock_symbol"</input>
+  <input type="submit">
+</form>
+
+<embed type="image/svg+xml" src="{{ chart }}" />
+{% endblock content %}

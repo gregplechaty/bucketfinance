@@ -13,7 +13,7 @@
         {% for transaction in transactions %}
             {% if transaction.bucket.id == bucket.id %}
                 <tr>
-                    <td>{{ transaction.transactionDate }}</td>
+                    <td>{{ transaction.transactionDate|date:"m/d/Y" }}</td>
                     <td>${{ transaction.amount }}</td>
                     <td>{{ transaction.description }}</td>
                     <td><a href="/dashboard/transaction/edit/{{ transaction.id }}/" class="btn btn-outline-primary"> ✏️ </a></td>

@@ -1,4 +1,6 @@
 import datetime
+import requests
+import pygal
 from django.shortcuts import render, redirect
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
@@ -26,7 +28,7 @@ def about(request):
 @login_required
 def dashboard(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
-    transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('transactionDate')
+    transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('-transactionDate')
     context = {
         'user': request.user,
         'buckets': buckets,
@@ -120,3 +122,36 @@ def delete_transaction(request, transaction_id):
         transaction_to_delete.removedDate = datetime.datetime.now()
         transaction_to_delete.save()
         return redirect('/dashboard')
+
+def stock_info(request):
+    if 'stock_symbol' in request.GET and request.GET['stock_symbol']:
+        stock_symbol = request.GET['stock_symbol']
+        url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + stock_symbol + '&apikey=AYGLUKRBOXGJSVWO'
+        response = requests.get(url)
+        stock_data = response.json()
+        x_values, y_values = stock_chart_value_generation(stock_data)
+        chart = stock_chart_generation(stock_symbol, x_values, y_values)
+        context = {
+            'chart': chart,
+        }
+        return render(request, 'pages/stock_info.html', context)
+    
+    return render(request, 'pages/stock_info.html')
+
+def stock_chart_value_generation(dataset):
+    print('-------view: stock_chart_generation')
+    x_values = ['2021-04-12', '2021-04-09', '2021-04-08', '2021-04-07', '2021-04-06']
+    y_values = []
+    for item in x_values:
+        y_values.append(float(dataset['Time Series (Daily)'][item]['4. close']))
+        x_labels.reverse()
+        y_values.reverse()
+    return x_values, y_values
+
+def stock_chart_generation(stock_symbol, x_values, y_values):
+    line_chart = pygal.Line(x_label_rotation=70)
+    line_chart.title = 'Recent Stock Closing prices for ' + stock_symbol.upper()
+    line_chart.x_labels = map(str, x_values)
+    line_chart.add(stock_symbol.upper(), y_values)
+    stat_line_chart = line_chart.render_data_uri()
+    return stat_line_chart

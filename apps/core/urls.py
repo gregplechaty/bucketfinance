@@ -12,4 +12,5 @@ urlpatterns = [
     path('dashboard/transaction/<bucket_id>/', views.create_transaction, name='create_transaction'),
     path('dashboard/transaction/edit/<transaction_id>/', views.edit_transaction, name='edit_transaction'),
     path('dashboard/transaction/delete/<transaction_id>/', views.delete_transaction, name='delete_transaction'),
+    path('stock/', views.stock_info, name='stock_info'),
 ]
