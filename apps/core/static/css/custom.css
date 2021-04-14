@@ -4,6 +4,10 @@
     background: linear-gradient(135deg, #f2f9fe 0%, #d6f0fd 100%);
 }
 
+.button-bucket {
+    font-size: 1.2rem;
+}
+
 .card-user {
     max-width: 80px;
 }

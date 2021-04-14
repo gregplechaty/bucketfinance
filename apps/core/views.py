@@ -29,12 +29,37 @@ def about(request):
 def dashboard(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
     transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('-transactionDate')
+    #dict_transactions_sums = bucket_amount_sum(request, buckets, transactions)
+    joined_Transaction_Bucket = bucket_transaction_join(request)
     context = {
         'user': request.user,
         'buckets': buckets,
         'transactions': transactions,
+        'table': joined_Transaction_Bucket
+        #'dict_transactions_sums': dict_transactions_sums,
     }
     return render(request, 'pages/dashboard.html', context)
+
+
+def bucket_transaction_join(request):
+    joined_table = Transaction.objects.select_related('bucket')
+    filtered_joined_table = joined_table.filter(user=request.user, removedDate__isnull=True)
+    return(filtered_joined_table)
+
+
+def bucket_amount_sum(request, buckets, transactions):
+    dict_transactions_sums = {}
+    for bucket in buckets:
+        bucket_transactions = transactions.filter(bucket=bucket)
+        if len(bucket_transactions) > 0:
+            temp_dict = bucket_transactions.aggregate(Sum('amount'))
+            dict_transactions_sums[bucket.id] = temp_dict['amount__sum']
+        else:
+            dict_transactions_sums[bucket.id] = 0
+    return(dict_transactions_sums)
+
+    
+
 
 @login_required
 def create_bucket(request):
@@ -144,7 +169,7 @@ def stock_chart_value_generation(dataset):
     y_values = []
     for item in x_values:
         y_values.append(float(dataset['Time Series (Daily)'][item]['4. close']))
-        x_labels.reverse()
+        x_values.reverse()
         y_values.reverse()
     return x_values, y_values
 

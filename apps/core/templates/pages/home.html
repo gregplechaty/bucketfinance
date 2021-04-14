@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 
 {% block title %}
-    My Site - Home
+    Bucket Finance - Home
 {% endblock title %}
 
 
 {% block content %}
 <div class="jumbotron">
-  <h1 class="display-4">My Site</h1>
-  <p class="lead">This is a simple Jumbotron component from Bootstrap 4.</p>
+  <h1 class="display-4">Bucket Finance</h1>
+  <p class="lead">Tracking your finances with less work and </p>
   <hr class="my-4">
   <p>Edit this to include your content.</p>
   <p class="lead">
-    <a class="btn btn-primary btn-lg" href="{% url 'about' %}" role="button">Learn more</a>
+    <a class="btn btn-primary btn-lg" href="{% url 'about' %}" role="button">How it works</a>
+    <a class="btn btn-primary btn-lg" href="/dashboard" role="button">Log in</a>
   </p>
 </div>
 
-<p>More stuff. {{ example_context_variable }}.</p>
+<p>Greg Plechaty, 2021.</p>
 
 {% endblock content %}
 
