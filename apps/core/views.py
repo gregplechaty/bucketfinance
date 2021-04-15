@@ -39,13 +39,22 @@ def dashboard(request):
 
 def bucket_amount_sum(buckets):
     dict_transactions_sums = {}
+    #TODO: filter out removed transactions
+
     all_transactions_for_these_buckets = Transaction.objects.filter(bucket__in=buckets)
+    #Below is Mike's original suggestion. Above was my previous solution, but this is an inner join
+    #all_transactions_for_these_buckets = Transaction.objects.filter(bucket=buckets)
     for transaction in all_transactions_for_these_buckets:
         if transaction.bucket_id not in dict_transactions_sums:
             dict_transactions_sums[transaction.bucket_id] = 0
         dict_transactions_sums[transaction.bucket_id] += transaction.amount
-    for bucket in buckets:
-        bucket.total_amount = dict_transactions_sums[bucket.id]
+    print("TAKE 2:", dict_transactions_sums)
+    if buckets.count() > 0:
+        for bucket in buckets:
+            if dict_transactions_sums == {}:
+                bucket.total_amount = 0
+            else:
+                bucket.total_amount = dict_transactions_sums[bucket.id]
     return buckets
 
 @login_required
@@ -118,7 +127,11 @@ def edit_transaction(request, transaction_id):
     if request.method == 'POST':
         form = AddTransaction(request.POST, instance=transaction_to_modify)
         if form.is_valid():
-            transaction_to_modify = form.save()
+            transaction_to_modify = form.save(commit=False)
+            transaction_to_modify.amount = abs(transaction_to_modify.amount)
+            if request.POST['transaction_type'] == 'subtract':
+                transaction_to_modify.amount = transaction_to_modify.amount * -1
+            transaction_to_modify.save()
             return redirect('/dashboard')
     else:
         form = AddTransaction(instance=transaction_to_modify)
