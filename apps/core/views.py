@@ -29,37 +29,24 @@ def about(request):
 def dashboard(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
     transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('-transactionDate')
-    #dict_transactions_sums = bucket_amount_sum(request, buckets, transactions)
-    joined_Transaction_Bucket = bucket_transaction_join(request)
+    buckets_with_sum = bucket_amount_sum(buckets)
     context = {
         'user': request.user,
-        'buckets': buckets,
         'transactions': transactions,
-        'table': joined_Transaction_Bucket
-        #'dict_transactions_sums': dict_transactions_sums,
+        'buckets_with_sum': buckets_with_sum,
     }
     return render(request, 'pages/dashboard.html', context)
 
-
-def bucket_transaction_join(request):
-    joined_table = Transaction.objects.select_related('bucket')
-    filtered_joined_table = joined_table.filter(user=request.user, removedDate__isnull=True)
-    return(filtered_joined_table)
-
-
-def bucket_amount_sum(request, buckets, transactions):
+def bucket_amount_sum(buckets):
     dict_transactions_sums = {}
+    all_transactions_for_these_buckets = Transaction.objects.filter(bucket__in=buckets)
+    for transaction in all_transactions_for_these_buckets:
+        if transaction.bucket_id not in dict_transactions_sums:
+            dict_transactions_sums[transaction.bucket_id] = 0
+        dict_transactions_sums[transaction.bucket_id] += transaction.amount
     for bucket in buckets:
-        bucket_transactions = transactions.filter(bucket=bucket)
-        if len(bucket_transactions) > 0:
-            temp_dict = bucket_transactions.aggregate(Sum('amount'))
-            dict_transactions_sums[bucket.id] = temp_dict['amount__sum']
-        else:
-            dict_transactions_sums[bucket.id] = 0
-    return(dict_transactions_sums)
-
-    
-
+        bucket.total_amount = dict_transactions_sums[bucket.id]
+    return buckets
 
 @login_required
 def create_bucket(request):
@@ -113,6 +100,9 @@ def create_transaction(request, bucket_id):
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.bucket = bucket
+            transaction.amount = abs(transaction.amount)
+            if request.POST['transaction_type'] == 'subtract':
+                transaction.amount = transaction.amount * -1
             transaction.save()
             return redirect('/dashboard')
     else:

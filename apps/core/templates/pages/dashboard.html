@@ -16,7 +16,7 @@
         <a class="btn btn-primary btn-lg" href="/dashboard/buckets" role="button">Create Bucket</a>
       </div>
   </div>
-{% for bucket in buckets %}
+{% for bucket in buckets_with_sum %}
   <div class="row my-2">
     <div class="col-md">
       <div> 
@@ -26,8 +26,8 @@
       <div class="card card-body">
         <div class="row">
           <div class="col-8">
-            <p>Total Funds: $PLACEHOLDER</p>
-            <p>{{ bucket.bucketDescription }}</p>
+            <h5><strong>Total Funds: ${{ bucket.total_amount }}</strong></h5>
+            <p><i>{{ bucket.bucketDescription }}</i></p>
           </div>
           <!-- Button trigger modal -->
           <div class="col-4">

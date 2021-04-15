@@ -9,10 +9,16 @@ class AddBucket(forms.ModelForm):
         model = Bucket
         fields = ['bucketName', 'bucketDescription']
 
+
+transaction_choices = [
+    ('add', 'Adding'),
+    ('subtract', 'Removing'),
+    ]
 class AddTransaction(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['amount', 'transactionDate', 'description']
+    transaction_type = forms.CharField(label='Are you adding or removing money?', widget=forms.Select(choices=transaction_choices))
 
 #class TypeAddTransaction(AddTransaction):
     #transaction_type = forms.CharField(max_length=50)
