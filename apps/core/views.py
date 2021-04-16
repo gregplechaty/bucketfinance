@@ -40,21 +40,17 @@ def dashboard(request):
 def bucket_amount_sum(buckets):
     dict_transactions_sums = {}
     #TODO: filter out removed transactions
-
     all_transactions_for_these_buckets = Transaction.objects.filter(bucket__in=buckets)
-    #Below is Mike's original suggestion. Above was my previous solution, but this is an inner join
-    #all_transactions_for_these_buckets = Transaction.objects.filter(bucket=buckets)
     for transaction in all_transactions_for_these_buckets:
         if transaction.bucket_id not in dict_transactions_sums:
             dict_transactions_sums[transaction.bucket_id] = 0
         dict_transactions_sums[transaction.bucket_id] += transaction.amount
     print("TAKE 2:", dict_transactions_sums)
-    if buckets.count() > 0:
-        for bucket in buckets:
-            if dict_transactions_sums == {}:
-                bucket.total_amount = 0
-            else:
+    for bucket in buckets:
+            if bucket.id in dict_transactions_sums:
                 bucket.total_amount = dict_transactions_sums[bucket.id]
+            else:
+                bucket.total_amount = 0
     return buckets
 
 @login_required
