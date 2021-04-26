@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib import auth
-from .models import Bucket, Transaction
+from .models import Bucket, Transaction, BankAccount, BankAccountStatus
     
 class AddBucket(forms.ModelForm):
     class Meta:
@@ -19,6 +19,11 @@ class AddTransaction(forms.ModelForm):
         model = Transaction
         fields = ['amount', 'transactionDate', 'description']
     transaction_type = forms.CharField(label='Are you adding or removing money?', widget=forms.Select(choices=transaction_choices))
+
+class AddBankAccount(forms.ModelForm):
+    class Meta:
+        model = BankAccount
+        fields = ['accountName', 'description']
 
 #class TypeAddTransaction(AddTransaction):
     #transaction_type = forms.CharField(max_length=50)

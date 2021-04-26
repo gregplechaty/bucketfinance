@@ -1,5 +1,7 @@
-from django.test import TestCase
-
+import requests
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from http import HTTPStatus
 from apps.accounts.models import User
 from apps.core.models import Bucket
 from apps.core.forms import AddBucket
@@ -9,30 +11,28 @@ class BucketModuleUnitTestCase(TestCase):
         fake_user = User.objects.create(username='test_user')
         fake_user.set_password('1234')
         fake_user.save()
-        self.bucket = Bucket.objects.create(
-            bucketName = 'Test Bucket 1',
-            bucketDescription = 'Test Bucket Description 1',
-            userID = fake_user
-        )
-        self.bucket = Bucket.objects.create(
-            bucketName = 'Test Bucket 2',
-            bucketDescription = 'Test Bucket Description 2',
-            userID = fake_user
-        )
-        self.bucket = Bucket.objects.create(
-            bucketName = 'Test Bucket 3',
-            bucketDescription = 'Test Bucket Description 3',
-            userID = fake_user
-        )
-        #self.client.login(username='test_user', password='1234')
+        
+        user_count = User.objects.count()
+        self.assertEqual(user_count, 1)
         print('setup complete')
-        self.assertEqual(Bucket.objects.count(), 3) 
+        #self.assertEqual(Bucket.objects.count(), 3) 
+
     
-    def test_increment_views(self):
-        self.client.login(username='test_user', password='1234')
-        fake_user = User.objects.get(id=1)
-        #response = self.client.get('/dashboard/%i' % fake_user.id)
-        response = self.client.get('/dashboard/1')
-        print(response)
-        self.assertEqual(Bucket.objects.count(), 3)
-        self.assertContains(response, 'Dashboard')
+
+    def test_Bucket_creation(self):
+        self.assertEqual(Bucket.objects.count(),0)
+        #self.client.login(username='test_user', password='1234')
+        c = Client()
+        cat = c.login(username='test_user', password='1234')
+        response = c.get('/dashboard/')
+        print('------dashboard view:', response)
+        self.assertContains(response, 'Create Bucket')
+        print('OK, trying to create a bucket...')
+        form = AddBucket(data={"bucketName": "Test Bucket 1", "bucketDescription": "Test description 1"})
+        
+        response = self.client.post(
+            "/dashboard/buckets/", data={"bucketName": "Test Bucket 1", "bucketDescription": "Test description 1"}
+        )
+        print('--------testing response out here:', response)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertEqual(Bucket.objects.count(),3)

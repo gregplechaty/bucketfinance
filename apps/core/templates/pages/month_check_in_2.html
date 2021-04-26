@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+    Bucket Finance: Stock Information
+{% endblock title %}
+{% block content %}
+
+<div class="default">
+  <h1>Step 2: Enter Account Balances</h1>
+
+  <div class="container">
+    <div class="row justify-content-start">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+          <a class="btn btn-primary btn-lg" href="/dashboard/check-in/account" role="button">Add Bank Account</a>
+        </div>
+        
+    </div>
+    {% for account in accounts %}
+      <div>
+        <p>{{ account.accountName }}</p>
+      </div>
+    {% endfor %}
+    <div>ACCOUNT INFO NEEDS TO GO HERE. This is also where users will enter their acocunt status, as well as their given "check-in" date. This is essentially going to act as a form.</div>
+    <div class="row justify-content-start">
+      <div class="col-lg-2 col-md-4 col-sm-12">
+        <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Continue</a>
+      </div>
+  </div>
+  </div>
+  
+</div>
+{% endblock content %}

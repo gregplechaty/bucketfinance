@@ -2,14 +2,14 @@ import datetime
 import requests
 import pygal
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import SuspiciousOperation
-
 from apps.accounts.models import User
-from apps.core.models import Bucket, Transaction
-from apps.core.forms import AddBucket, AddTransaction
+from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
+from apps.core.forms import AddBucket, AddTransaction, AddBankAccount
 
 
 def home(request):
@@ -45,7 +45,6 @@ def bucket_amount_sum(buckets):
         if transaction.bucket_id not in dict_transactions_sums:
             dict_transactions_sums[transaction.bucket_id] = 0
         dict_transactions_sums[transaction.bucket_id] += transaction.amount
-    print("TAKE 2:", dict_transactions_sums)
     for bucket in buckets:
             if bucket.id in dict_transactions_sums:
                 bucket.total_amount = dict_transactions_sums[bucket.id]
@@ -57,6 +56,7 @@ def bucket_amount_sum(buckets):
 def create_bucket(request):
     if request.method == 'POST':
         form = AddBucket(request.POST)
+        print('Here is the request post:', request.POST)
         if form.is_valid():
             bucket = form.save(commit=False)
             bucket.user = request.user
@@ -76,7 +76,8 @@ def edit_bucket(request, bucket_id):
         form = AddBucket(request.POST, instance=bucket_to_modify)
         if form.is_valid():
             bucket_to_modify = form.save()
-            return redirect('/dashboard')
+            last_action = 'indeed'
+            return redirect(dashboard, last_action='yup')
     else:
         form = AddBucket(instance=bucket_to_modify)
     context = {
@@ -146,6 +147,68 @@ def delete_transaction(request, transaction_id):
         transaction_to_delete.removedDate = datetime.datetime.now()
         transaction_to_delete.save()
         return redirect('/dashboard')
+
+
+@login_required
+def monthly_check_in_1(request):
+    print('------------view: monthly_check_in_1:')
+    context = {
+        'user': request.user,
+    }
+    return render(request, 'pages/month_check_in_1.html', context)
+
+@login_required
+def monthly_check_in_2(request):
+    print('------------view: monthly_check_in_2:')
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    context = {
+        'user': request.user,
+        'accounts': accounts,
+    }
+    return render(request, 'pages/month_check_in_2.html', context)
+
+@login_required
+def create_account(request):
+    if request.method == 'POST':
+        form = AddBankAccount(request.POST)
+        print('Here is the request post:', request.POST)
+        if form.is_valid():
+            bucket = form.save(commit=False)
+            bucket.user = request.user
+            bucket.save()
+            return redirect(monthly_check_in_2)
+    else:
+        form = AddBankAccount()
+    context = {
+        'form': form,
+    }
+    return render(request, 'pages/form_page.html', context)
+
+
+
+#FLOW OF THE MONTHLY Check-in
+
+#1. Give opportunity to record any one-off expenses from previous months. maybe redirect to
+#homepage for now
+
+#1.5  Might want to do a date check for the last month they recorded. then compare that
+#     to the current date.
+
+
+
+#2. Ask user for:
+# ---bank account (possibility for multiple accounts???) balance
+# ---option to create new bank account
+# ---Date of check-in
+### might need to create a new model: Bank Balance (userID, Date, progress/stepID, bank account name,
+### bank balance, maybe a link to the transactions table; create/saved/removed date)
+### might need to add a new column to the
+
+#3. Calculate the difference between last amount and new amount.
+
+#4. Allocate (or withdraw) funds from buckets. Should be done on a single page.
+
+
 
 def stock_info(request):
     if 'stock_symbol' in request.GET and request.GET['stock_symbol']:
