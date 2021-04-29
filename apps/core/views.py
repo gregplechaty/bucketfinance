@@ -160,6 +160,9 @@ def monthly_check_in_1(request):
 @login_required
 def monthly_check_in_2(request):
     print('------------view: monthly_check_in_2:')
+    if request.method == 'POST':
+        print('I need to work on this...')
+    
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
     context = {
         'user': request.user,
@@ -190,10 +193,6 @@ def create_account(request):
 
 #1. Give opportunity to record any one-off expenses from previous months. maybe redirect to
 #homepage for now
-
-#1.5  Might want to do a date check for the last month they recorded. then compare that
-#     to the current date.
-
 
 
 #2. Ask user for:
