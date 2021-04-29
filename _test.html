@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>
+        
+    Bucket Finance: Dashboard
+
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/css/signinform.css" rel="stylesheet">
+
+    <!-- Add your custom CSS to this file -->
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+<body>
+
+<nav class="navbar navbar-expand-md">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <!-- Add your logo here!  <img src="" /> -->
+            My Site
+        </a>
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                ☰
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/about/">How it works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stock">Stock info</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account/logout/" >Sign Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account/users/test_user/" >
+                            test_user
+                            <img src="https://gravatar.com/avatar/09d5e998ec7e4333e13de7b84a9be2e8?d=identicon" class="navbar-avatar" />
+                        </a>
+                    </li>
+                
+            </ul>
+
+        </div>
+    </nav>
+</div>
+
+
+
+
+    <div class="container pt-2">
+
+      
+      
+
+      
+
+<div class="container">
+  <div class="row justify-content-start">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <h2>Hello test_user</h2>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-12">
+        <a class="btn btn-primary btn-lg" href="/dashboard/buckets" role="button">Create Bucket</a>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-12">
+        <a class="btn btn-primary btn-lg" href="/dashboard/check-in/1" role="button">Complete Monthly Check-in</a>
+      </div>
+  </div>
+
+  <div class="row my-2">
+    <div class="col-md">
+      <div> 
+        <a class="btn btn-success col-8" data-toggle="collapse" href="#bucket1" role="button" aria-expanded="false" aria-controls="bucket1">Test Bucket 1<span style='font-size:20px;'>☰</span></a>
+      </div>
+      <div class="collapse" id="bucket1">
+      <div class="card card-body">
+        <div class="row">
+          <div class="col-8">
+            <h5><strong>Total Funds: $0</strong></h5>
+            <p><i>Test description 1</i></p>
+          </div>
+          <!-- Button trigger modal -->
+          <div class="col-4">
+            <div class="col-12 my-2">
+              <a class="btn btn-success btn-lg" href="buckets/edit/1/" role="button">Edit Bucket</a>
+            </div>
+            <div class="col-12 my-2">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal1">
+              Delete Bucket
+            </button>
+          </div>
+          
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Bucket</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete Test Bucket 1? This will remove all corresponding transactions associated.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="/dashboard/buckets/delete/1/" role="button">Delete Bucket changes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+        </div>
+        </p>
+        </div>
+        <div class="row my-2">
+          <a class="btn btn-primary col-8 my-2" href="/dashboard/transaction/1" role="button">Add or Remove Funds</a>
+          <div class="col-12 my-2">
+
+            
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Description</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+  </table>
+
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+      
+
+
+
+
+
+    </div>
+
+
+
+      <script src="/static/js/bootstrap/jquery-3.4.1.min.js"></script>
+      <script src="/static/js/bootstrap/bootstrap.js"></script>
+  </body>
+</html>
+

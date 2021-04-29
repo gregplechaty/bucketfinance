@@ -157,18 +157,38 @@ def monthly_check_in_1(request):
     }
     return render(request, 'pages/month_check_in_1.html', context)
 
+
+def get_bank_account_info(request):
+    # Getting user's bank accounts
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
+    bank_account_last_check_in_date = {}
+    for account in accounts:
+        print('-------in accounts loop')
+        #account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('status_date')[:1]
+        if len(all_statuses_for_these_accounts) == 0:
+            #bank_account_last_check_in_date[account.pk] = 'None. Start your first check-in below by clicking "Continue!"'
+            account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
+        else:
+            #bank_account_last_check_in_date[account.pk] = account_status.status_date
+            account.last_check_in_date = account_status.status_date
+    print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
+    return accounts
+
+
 @login_required
 def monthly_check_in_2(request):
     print('------------view: monthly_check_in_2:')
     if request.method == 'POST':
         print('I need to work on this...')
-    
-    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    accounts = get_bank_account_info(request)
     context = {
         'user': request.user,
         'accounts': accounts,
     }
     return render(request, 'pages/month_check_in_2.html', context)
+
+
 
 @login_required
 def create_account(request):

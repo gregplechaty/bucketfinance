@@ -18,7 +18,7 @@
         {% for account in accounts %}
         <div>
           <h5><strong>Account Name:</strong> {{ account.accountName }}</h5>
-          <p><strong>Last Check-In Date:</strong> WORK IN PROGRESS</p>
+          <p><strong>Last Check-In Date:</strong>{{ account.last_check_in_date }}</p>
 
             <label for="date{{ account.id }}">Today's Check-In Date:</label>
             <input type="date" id="date{{ account.id }}" name="date{{ account.id }}">
