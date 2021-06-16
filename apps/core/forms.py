@@ -25,9 +25,7 @@ class AddBankAccount(forms.ModelForm):
         model = BankAccount
         fields = ['accountName', 'description']
 
-#class TypeAddTransaction(AddTransaction):
-    #transaction_type = forms.CharField(max_length=50)
-
-    #class Meta(AddTransaction.Meta):
-        #fields = (AddTransaction.Meta.fields, 'transaction_type')
-
+class AddBankAccountStatus(forms.ModelForm):
+    class Meta:
+        model = BankAccountStatus
+        fields = ['amount', 'status_date', 'description']

@@ -43,7 +43,6 @@ class BankAccount(models.Model):
     removed_date = models.DateTimeField(null=True)
 
 class BankAccountStatus(models.Model):
-    # A very simple model example
     bank_account = models.ForeignKey(
         BankAccount,
         on_delete=models.CASCADE,
