@@ -1,8 +1,77 @@
-/* Custom CSS goes here */
+/* Color Pallette */
+:root {
+    --green-light: hsl(126, 71.4%, 91.8%);
+
+    --cream: hsl(138, 33%, 94%);
+    --green-main: hsl(129, 37%, 36%);
+    --green-dark: hsl(140, 35%, 22%);
+    --black-text: hsl(220, 24%, 12%);
+  }
+
+body {
+    background-color: var(--green-light);
+     /* unvisited link */
+
+}
+
+/***************** NAV BAR *****************/
 
 .navbar {
-    background: linear-gradient(135deg, #f2f9fe 0%, #d6f0fd 100%);
+    background-color: var(--green-dark);
+    color: var(--cream);
 }
+ /* unvisited link */
+.navbar a:link {
+   color: var(--cream);
+}
+/* visited link  */
+ .navbar a:visited {
+   color: var(--cream);
+}
+ /* mouse over link */
+ .navbar a:hover {
+  color: hotpink;
+}
+ /*  selected link */
+ .navbar a:active {
+  color: var(--cream);
+} 
+
+/***************** DASHBOARD *****************/
+
+.dashboardCard {
+  background-color: var(--green-light)
+}
+
+
+/***************** GENERAL USE *****************/
+
+.gen--button__standard {
+  color: var(--cream);
+  background-color: var(--black-text);
+  border-color: #0062cc;
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: .3rem;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: color .15s ease-in-out,
+  background-color .15s ease-in-out,
+  border-color .15s ease-in-out,
+  box-shadow .15s ease-in-out;
+
+}
+
+.gen--button__standard:hover {
+  text-decoration: none;
+}
+
+
 
 .button-bucket {
     font-size: 1.2rem;

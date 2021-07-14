@@ -166,6 +166,7 @@ def get_bank_account_info(request):
     for account in accounts:
         print('-------in accounts loop')
         account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('status_date')[:1]
+        print('account status:', account_status)
         if len(all_statuses_for_these_accounts) == 0:
             #bank_account_last_check_in_date[account.pk] = 'None. Start your first check-in below by clicking "Continue!"'
             account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
@@ -183,91 +184,9 @@ def monthly_check_in_2(request):
     if request.method == 'POST':
         print('Working on Check-In-POST...')
         print("-----here's the post request:", request.POST)
-        # do some kind of data validation
-        # holder array of IDs
-        account_id_array = []
-        # get number of bank accounts submitted; a list of bank account ids
-        for item in request.POST:
-            print("-------Item in request.POST:", item)
-            # TODO: split, or delimit, by a symbol or string. append to account_id_array
-            # then, remove duplicates from array.
-
-
-        # step 1: get all inputs all_inputs. this is a list of dictionaries
-        # step 2: get only the number at the end of KeyIDs
-        # step 3: remove duplicates
-        # step 4: this goes in a list.
-        
-        #iterate through that list. grab corresponding values for that 
-        # say this array is [2, 5, 19]
-        # for bankID in array
-            # for item in all_inputs
-                # if suffix = bankID:
-                    # strip suffix.
-
-
-
-        # for each bank account id:
-
-            # create a for   # for item in all_inputs
-                # if suffix = bankID:
-                    # strip suffix.
-
-
-
-        # for each bank account id:
-
-            # create a form object,
-            #form = AddBankAccountStatus()
-            # populate that form with necessary data
-            # save form
-            #if form.is_valid():
-        #redirect to monthly checkin page 3
-
-
-        # For now, going to try hardcoding the form to get that working.
-        # Or, maybe just handle the first account for a user
-        # If I can get this to work, then I can just focus on connecting
-        # the form data to the hardcoded form object.
-
-##### OH MAH GOSH, DID I ACTUALLY MAKE PROGRESS BELOW???
-# This saves. sick. ok, now i gotta populate this with data from the post request
-
-
-        new_bank_account_status = AddBankAccountStatus()
-        account_status = new_bank_account_status.save(commit=False)
-        account_status.amount = "100"
-        account_status.status_date = '2021-06-01'
-        account_status.description = 'hardcoded description text. You have no control!'
-        current_bank_account = BankAccount.objects.get(id=5)
-        print(current_bank_account)
-        account_status.bank_account = current_bank_account
-        account_status.save()
+        account_status_array = create_account_status_array(request)
+        save_account_status(account_status_array)
         return redirect('/dashboard')
-
-
-
-        #m object,
-            #form = AddBankAccountStatus()
-            # populate that form with necessary data
-            # save form
-            #if form.is_valid():
-        #redirect to monthly checkin page 3
-
-
-        # For now, going to try hardcoding the form to get that working.
-        # Or, maybe just handle the first account for a user
-        # If I can get this to work, then I can just focus on connecting
-        # the form data to the hardcoded form object.
-
-        
-        #if form.is_valid():
-        #    bucket = form.save(commit=False)
-        #    bucket.user = request.user
-        #    bucket.save()
-        #    return redirect('/dashboard')
-
-        
     accounts = get_bank_account_info(request)
     context = {
         'user': request.user,
@@ -275,7 +194,43 @@ def monthly_check_in_2(request):
     }
     return render(request, 'pages/month_check_in_2.html', context)
 
+def create_account_status_array(request):
+    account_status_array = []
+    account_id_array = []
+    i = 0
+    for item in request.POST:
+        idarray = item.split("__",1)
+        print("-------Item in request.POST:", item, i, idarray)
+        if i == 0:
+            i = i + 1
+        elif str(idarray[1]) in account_id_array and i != 0:
+            print('id already in account_id_array, do nothing')
+        elif i != 0:
+            print('new id, oh boy')
+            account_id_array.append(item.split("__",1)[1])
+        i = i + 1
+    print('account_id_array:', account_id_array)
+    for item in account_id_array:
+        account_status_array.append({
+            'account_id': item,
+            'date': request.POST['date__' + item],
+            'amount': request.POST['amount__' + item]
+        })
+    print('account_status_array:', account_status_array)
+    return account_status_array
 
+def save_account_status(account_status_array):
+    for account in account_status_array:
+            new_bank_account_status = AddBankAccountStatus()
+            account_status = new_bank_account_status.save(commit=False)
+            account_status.amount = account["amount"]
+            account_status.status_date = account["date"]
+            account_status.description = 'hardcoded description text. You have no control!'
+            current_bank_account = BankAccount.objects.get(id=int(account["account_id"]))
+            account_status.bank_account = current_bank_account
+            print('account status:', account_status)
+            account_status.save()
+            print('Save of account status successful!')
 
 @login_required
 def create_account(request):

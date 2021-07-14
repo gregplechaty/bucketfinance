@@ -13,7 +13,7 @@
         <h2>Hello {{ user.username }}</h2>
       </div>
       <div class="col-lg-2 col-md-4 col-sm-12">
-        <a class="btn btn-primary btn-lg" href="/dashboard/buckets" role="button">Create Bucket</a>
+        <a class="gen--button__standard" href="/dashboard/buckets" role="button">Create Bucket</a>
       </div>
       <div class="col-lg-2 col-md-4 col-sm-12">
         <a class="btn btn-primary btn-lg" href="/dashboard/check-in/1" role="button">Complete Monthly Check-in</a>
@@ -26,7 +26,7 @@
         <a class="btn btn-success col-8" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">{{ bucket.bucketName }}<span style='font-size:20px;'>☰</span></a>
       </div>
       <div class="collapse" id="bucket{{bucket.id}}">
-      <div class="card card-body">
+      <div class="card card-body dashboardCard">
         <div class="row">
           <div class="col-8">
             <h5><strong>Total Funds: ${{ bucket.total_amount }}</strong></h5>
