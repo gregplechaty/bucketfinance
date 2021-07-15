@@ -25,11 +25,15 @@ def about(request):
     }
     return render(request, 'pages/about.html', context)
 
-@login_required
-def dashboard(request):
+def get_buckets_transactions(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
     transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('-transactionDate')
     buckets_with_sum = bucket_amount_sum(buckets)
+    return buckets, transactions, buckets_with_sum
+
+@login_required
+def dashboard(request):
+    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
     context = {
         'user': request.user,
         'transactions': transactions,
@@ -39,8 +43,7 @@ def dashboard(request):
 
 def bucket_amount_sum(buckets):
     dict_transactions_sums = {}
-    #TODO: filter out removed transactions
-    all_transactions_for_these_buckets = Transaction.objects.filter(bucket__in=buckets)
+    all_transactions_for_these_buckets = Transaction.objects.filter(bucket__in=buckets, removedDate__isnull=True)
     for transaction in all_transactions_for_these_buckets:
         if transaction.bucket_id not in dict_transactions_sums:
             dict_transactions_sums[transaction.bucket_id] = 0
@@ -76,7 +79,6 @@ def edit_bucket(request, bucket_id):
         form = AddBucket(request.POST, instance=bucket_to_modify)
         if form.is_valid():
             bucket_to_modify = form.save()
-            #last_action = 'indeed'  # I think i was working on the flash message thing.
             return redirect(dashboard)
     else:
         form = AddBucket(instance=bucket_to_modify)
@@ -161,18 +163,18 @@ def monthly_check_in_1(request):
 def get_bank_account_info(request):
     # Getting user's bank accounts
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    print('################', accounts)
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
+    print('################', all_statuses_for_these_accounts)
     bank_account_last_check_in_date = {}
     for account in accounts:
         print('-------in accounts loop')
         account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('status_date')[:1]
-        print('account status:', account_status)
+        print('****************account status:', account, account_status)
         if len(all_statuses_for_these_accounts) == 0:
-            #bank_account_last_check_in_date[account.pk] = 'None. Start your first check-in below by clicking "Continue!"'
             account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
         else:
-            #bank_account_last_check_in_date[account.pk] = account_status.status_date
-            account.last_check_in_date = account_status.status_date
+            account.last_check_in_date = account_status[0].status_date
     print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
     return accounts
 
@@ -194,29 +196,43 @@ def monthly_check_in_2(request):
     }
     return render(request, 'pages/month_check_in_2.html', context)
 
+
+
+
+@login_required
+def monthly_check_in_3(request):
+    print('------------view: monthly_check_in_3:')
+    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+    accounts = get_bank_account_info(request)
+    context = {
+        'user': request.user,
+        'accounts': accounts,
+    }
+    return render(request, 'pages/month_check_in_2.html', context)
+
+
+
+
+
 def create_account_status_array(request):
     account_status_array = []
     account_id_array = []
     i = 0
     for item in request.POST:
         idarray = item.split("__",1)
-        print("-------Item in request.POST:", item, i, idarray)
         if i == 0:
             i = i + 1
         elif str(idarray[1]) in account_id_array and i != 0:
             print('id already in account_id_array, do nothing')
         elif i != 0:
-            print('new id, oh boy')
             account_id_array.append(item.split("__",1)[1])
         i = i + 1
-    print('account_id_array:', account_id_array)
     for item in account_id_array:
         account_status_array.append({
             'account_id': item,
             'date': request.POST['date__' + item],
             'amount': request.POST['amount__' + item]
         })
-    print('account_status_array:', account_status_array)
     return account_status_array
 
 def save_account_status(account_status_array):
