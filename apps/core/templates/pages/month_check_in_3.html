@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}
+    Bucket Finance: Stock Information
+{% endblock title %}
+{% block content %}
+
+<div class="default">
+  <h1>Step 3: You're Up!</h1>
+
+  <div class="container">
+    <div class="row justify-content-start">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+          <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Try Your Logic!</a>
+        </div>
+        
+    </div>
+      <form action = '' method="POST">
+        {% csrf_token %}
+
+        <table class="table">
+          <thead class="thead-light">
+              <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Bank Account</th>
+                  <th scope="col">Previous Amount</th>
+                  <th scope="col">Add/Remove</th>
+                  <th scope="col">New amount</th>
+              </tr>
+          </thead>
+          {% for account in accounts %}
+          <tbody>
+                      <tr>
+                          <td>{{ account.last_check_in_date|date:"m/d/Y" }}</td>
+                          <td>{{ account.accountName }}</td>
+                          <td name="lastAmount">{{ account.last_amount }}</td>
+                          <td><input type="number" name="addOrRemove" min="0" step="1" required oninput="addOrRemove()"/></td>
+                          <td>Calculated amount</td>
+                      </tr>
+
+          </tbody>
+          {% endfor %}
+          <tfoot class="thead-light">
+            <tr>
+                <td scope="col">Result</td>
+                <td scope="col"></td>
+                <td scope="col" name="previousSum"></td>
+                <td scope="col" name="addOrRemoveSum"></td>
+                <td scope="col">Sum new amounts</td>
+            </tr>
+          </tfoot>
+        </table>
+        
+
+      </form> 
+    </div>
+    <div class="row justify-content-start">
+      <div class="col-lg-2 col-md-4 col-sm-12">
+        <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Continue</a>
+      </div>
+  </div>
+  </div>
+  
+</div>
+{% endblock content %}

@@ -165,17 +165,20 @@ def get_bank_account_info(request):
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
     print('################', accounts)
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
-    print('################', all_statuses_for_these_accounts)
+    #print('################', all_statuses_for_these_accounts)
     bank_account_last_check_in_date = {}
+    ## Here we add last status check-in to the account info
     for account in accounts:
         print('-------in accounts loop')
         account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('status_date')[:1]
-        print('****************account status:', account, account_status)
+        #print('****************account status:', account, account_status)
         if len(all_statuses_for_these_accounts) == 0:
             account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
         else:
             account.last_check_in_date = account_status[0].status_date
-    print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
+            account.last_amount = account_status[0].amount
+            print('LAST_AMOUNT:', account_status[0].amount)
+    #print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
     return accounts
 
 
@@ -188,7 +191,7 @@ def monthly_check_in_2(request):
         print("-----here's the post request:", request.POST)
         account_status_array = create_account_status_array(request)
         save_account_status(account_status_array)
-        return redirect('/dashboard')
+        return redirect('pages/month_check_in_3.html')
     accounts = get_bank_account_info(request)
     context = {
         'user': request.user,
@@ -196,19 +199,37 @@ def monthly_check_in_2(request):
     }
     return render(request, 'pages/month_check_in_2.html', context)
 
+
+def tryMyLogic(request):
+    accounts = get_bank_account_info(request)
+    print('account:', accounts)
 
 
 
 @login_required
 def monthly_check_in_3(request):
     print('------------view: monthly_check_in_3:')
-    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+    if request.method == 'POST':
+        print("-----here's the post request:", request.POST)
+        return redirect('/dashboard')
     accounts = get_bank_account_info(request)
+    tryMyLogic(request)
     context = {
         'user': request.user,
-        'accounts': accounts,
+        'accounts': accounts, 
     }
-    return render(request, 'pages/month_check_in_2.html', context)
+    return render(request, 'pages/month_check_in_3.html', context)
+
+#@login_required
+#def monthly_check_in_3(request):
+#    print('------------view: monthly_check_in_3:')
+#    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+#    accounts = get_bank_account_info(request)
+#    context = {
+#       'user': request.user,
+#        'accounts': accounts,
+#    }
+#    return render(request, 'pages/month_check_in_2.html', context)
 
 
 
@@ -264,26 +285,6 @@ def create_account(request):
         'form': form,
     }
     return render(request, 'pages/form_page.html', context)
-
-
-
-#FLOW OF THE MONTHLY Check-in
-
-#1. Give opportunity to record any one-off expenses from previous months. maybe redirect to
-#homepage for now
-
-
-#2. Ask user for:
-# ---bank account (possibility for multiple accounts???) balance
-# ---option to create new bank account
-# ---Date of check-in
-### might need to create a new model: Bank Balance (userID, Date, progress/stepID, bank account name,
-### bank balance, maybe a link to the transactions table; create/saved/removed date)
-### might need to add a new column to the
-
-#3. Calculate the difference between last amount and new amount.
-
-#4. Allocate (or withdraw) funds from buckets. Should be done on a single page.
 
 
 
