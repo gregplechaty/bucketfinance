@@ -159,28 +159,40 @@ def monthly_check_in_1(request):
     }
     return render(request, 'pages/month_check_in_1.html', context)
 
+###############################################################################################
 
 def get_bank_account_info(request):
     # Getting user's bank accounts
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
-    print('################', accounts)
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
-    #print('################', all_statuses_for_these_accounts)
-    bank_account_last_check_in_date = {}
     ## Here we add last status check-in to the account info
     for account in accounts:
-        print('-------in accounts loop')
-        account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('status_date')[:1]
-        #print('****************account status:', account, account_status)
+        account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[:1]
         if len(all_statuses_for_these_accounts) == 0:
             account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
         else:
             account.last_check_in_date = account_status[0].status_date
-            account.last_amount = account_status[0].amount
-            print('LAST_AMOUNT:', account_status[0].amount)
+            account.newest_amount = account_status[0].amount
+        
+            
     #print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
     return accounts
 
+def get_bank_account_info_previous(request):
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
+    ## Here we add last status check-in to the account info
+    for account in accounts:
+        print('-------in PREVIOUS accounts loop')
+        account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[1:2]
+        print('-------statuses:', account_status)
+        if len(all_statuses_for_these_accounts) == 0:
+            account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
+        else:
+            account.last_check_in_date = account_status[0].status_date
+            account.newest_amount = account_status[0].amount
+        print('-------new fields:', account.last_check_in_date, account.newest_amount)
+    return accounts
 
 
 @login_required
@@ -200,10 +212,17 @@ def monthly_check_in_2(request):
     return render(request, 'pages/month_check_in_2.html', context)
 
 
-def tryMyLogic(request):
+def change_in_all_accounts_balance(request):
     accounts = get_bank_account_info(request)
-    print('account:', accounts)
+    previous_account_info = get_bank_account_info_previous(request)
+    change_in_all_accounts = sum_of_all_accounts(accounts) - sum_of_all_accounts(previous_account_info)
+    return change_in_all_accounts
 
+def sum_of_all_accounts(accounts):
+    sum = 0
+    for account in accounts:
+        sum = sum + account.newest_amount
+    return sum
 
 
 @login_required
@@ -213,27 +232,14 @@ def monthly_check_in_3(request):
         print("-----here's the post request:", request.POST)
         return redirect('/dashboard')
     accounts = get_bank_account_info(request)
-    tryMyLogic(request)
     context = {
         'user': request.user,
-        'accounts': accounts, 
+        'accounts': accounts,
+        'account_balance_change': change_in_all_accounts_balance(request),
     }
     return render(request, 'pages/month_check_in_3.html', context)
 
-#@login_required
-#def monthly_check_in_3(request):
-#    print('------------view: monthly_check_in_3:')
-#    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
-#    accounts = get_bank_account_info(request)
-#    context = {
-#       'user': request.user,
-#        'accounts': accounts,
-#    }
-#    return render(request, 'pages/month_check_in_2.html', context)
-
-
-
-
+###################################################################################################
 
 def create_account_status_array(request):
     account_status_array = []

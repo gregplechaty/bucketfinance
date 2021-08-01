@@ -5,8 +5,8 @@
 {% block content %}
 
 <div class="default">
-  <h1>Step 3: You're Up!</h1>
-
+  <h1>Step 3: Your account balance changed by ${{ account_balance_change }}</h1>
+  <p>Add or remove funds by this amount.</p>
   <div class="container">
     <div class="row justify-content-start">
         <div class="col-lg-2 col-md-4 col-sm-12">
@@ -32,7 +32,7 @@
                       <tr>
                           <td>{{ account.last_check_in_date|date:"m/d/Y" }}</td>
                           <td>{{ account.accountName }}</td>
-                          <td name="lastAmount">{{ account.last_amount }}</td>
+                          <td name="lastAmount">{{ account.newest_amount }}</td>
                           <td><input type="number" name="addOrRemove" step="0.01" oninput="render()" required /></td>
                           <td name="newAmount">Calculated amount</td>
                       </tr>
