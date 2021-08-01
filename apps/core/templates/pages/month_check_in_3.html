@@ -20,19 +20,17 @@
         <table class="table">
           <thead class="thead-light">
               <tr>
-                  <th scope="col">Date</th>
                   <th scope="col">Bank Account</th>
-                  <th scope="col">Previous Amount</th>
+                  <th scope="col">Current Amount</th>
                   <th scope="col">Add/Remove</th>
                   <th scope="col">New amount</th>
               </tr>
           </thead>
-          {% for account in accounts %}
+          {% for bucket in buckets_with_sum %}
           <tbody>
                       <tr>
-                          <td>{{ account.last_check_in_date|date:"m/d/Y" }}</td>
-                          <td>{{ account.accountName }}</td>
-                          <td name="lastAmount">{{ account.newest_amount }}</td>
+                          <td>{{ bucket.bucketName }}</td>
+                          <td name="lastAmount">{{ bucket.total_amount }}</td>
                           <td><input type="number" name="addOrRemove" step="0.01" oninput="render()" required /></td>
                           <td name="newAmount">Calculated amount</td>
                       </tr>
@@ -42,7 +40,6 @@
           <tfoot class="thead-light">
             <tr>
                 <td scope="col">Result</td>
-                <td scope="col"></td>
                 <td scope="col" name="previousSum"></td>
                 <td scope="col" name="addOrRemoveSum"></td>
                 <td scope="col" name="newAmountSum">Sum new amounts</td>

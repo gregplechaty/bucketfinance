@@ -183,15 +183,13 @@ def get_bank_account_info_previous(request):
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
     ## Here we add last status check-in to the account info
     for account in accounts:
-        print('-------in PREVIOUS accounts loop')
         account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[1:2]
-        print('-------statuses:', account_status)
         if len(all_statuses_for_these_accounts) == 0:
             account.last_check_in_date = 'None. Start your first check-in below by clicking "Continue!"'
+            account.newest_amount = 0
         else:
             account.last_check_in_date = account_status[0].status_date
             account.newest_amount = account_status[0].amount
-        print('-------new fields:', account.last_check_in_date, account.newest_amount)
     return accounts
 
 
@@ -231,11 +229,14 @@ def monthly_check_in_3(request):
     if request.method == 'POST':
         print("-----here's the post request:", request.POST)
         return redirect('/dashboard')
-    accounts = get_bank_account_info(request)
+    #accounts = get_bank_account_info(request)
+    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
     context = {
         'user': request.user,
-        'accounts': accounts,
+        #'accounts': accounts,
         'account_balance_change': change_in_all_accounts_balance(request),
+        'buckets_with_sum': buckets_with_sum,
+        
     }
     return render(request, 'pages/month_check_in_3.html', context)
 
