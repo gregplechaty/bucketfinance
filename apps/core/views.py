@@ -58,10 +58,8 @@ def bucket_amount_sum(buckets):
 
 @login_required
 def create_bucket(request):
-    print('the method:', request.method, request)
     if request.method == 'POST':
         form = AddBucket(request.POST)
-        print('Here is the request post:', request.POST)
         if form.is_valid():
             bucket = form.save(commit=False)
             bucket.user = request.user
@@ -103,13 +101,10 @@ def delete_bucket(request, bucket_id):
 
 @login_required
 def create_transaction(request, bucket_id):
-    print('the method:', request.method, request)
     if request.method == 'POST':
-        print('request is a post')
         bucket = Bucket.objects.get(id=bucket_id)
         form = AddTransaction(request.POST)
         if form.is_valid():
-            print('Form is valid')
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.bucket = bucket
@@ -196,7 +191,6 @@ def get_bank_account_info_previous(request):
 
 @login_required
 def monthly_check_in_2(request):
-    print('------------view: monthly_check_in_2:')
     if request.method == 'POST':
         account_status_array = create_account_status_array(request)
         save_account_status(account_status_array)
@@ -227,19 +221,15 @@ def monthly_check_in_3(request):
     print('------------view: monthly_check_in_3:')
     if request.method == 'POST':
         #TODO: Logic to reject bad add/remove amount
-        print("-----here's the post request:", request.POST)
         bucket_id_array = create_post_type_array(request)
         transaction_array = create_array_from_form(request, bucket_id_array)
-        print('transaction_array', transaction_array)
         save_check_in_transactions(request, transaction_array)
-        redirect('pages/month_check_in_3.html')
-    #accounts = get_bank_account_info(request)
+        return redirect(check_in_success)
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
     context = {
         'user': request.user,
         'account_balance_change': change_in_all_accounts_balance(request),
-        'buckets_with_sum': buckets_with_sum,
-        
+        'buckets_with_sum': buckets_with_sum,  
     }
     return render(request, 'pages/month_check_in_3.html', context)
 
@@ -248,7 +238,7 @@ def check_in_success(request):
     context = {
         'user': request.user,
     }
-    return render(request, 'pages/check_in_success.html', context)
+    return render(request, 'pages/month_check_in_success.html', context)
 
 def save_check_in_transactions(request, transaction_array):
     for transaction in transaction_array:
@@ -261,7 +251,7 @@ def save_check_in_transactions(request, transaction_array):
             new_transaction.transactionDate = date.today()
             new_transaction.description = 'Check-In adjustment'
             new_transaction.save()
-            print('Save of new_transaction successful!')
+
 
 ###################################################################################################
 
@@ -320,9 +310,7 @@ def save_account_status(account_status_array):
             account_status.description = 'hardcoded description text. You have no control!'
             current_bank_account = BankAccount.objects.get(id=int(account["account_id"]))
             account_status.bank_account = current_bank_account
-            print('account status:', account_status)
             account_status.save()
-            print('Save of account status successful!')
 
 @login_required
 def create_account(request):
