@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from http import HTTPStatus
 from apps.accounts.models import User
-from apps.core.models import Bucket, Transaction, BankAccount
+from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction
 
 class BucketModuleUnitTestCase(TestCase):
@@ -68,10 +68,62 @@ class BankAccountModuleTestCase(TestCase):
         self.assertContains(response, 'AccountName')
 
 
-    def test_Transaction_creation(self):
+    def test_BankAccount_creation(self):
         responseTwo = self.client.post(
             "/dashboard/check-in/account", follow=True, data={"accountName": "Gringotts Wizarding Bank", "description": "An arcane, underground vault guarded by a dragon. Only opened by authorized goblins.",}
         )
-        open('_test.html', 'wb+').write(responseTwo.content)
         self.assertEqual(BankAccount.objects.count(),1)
         self.assertContains(responseTwo, 'Gringotts Wizarding Bank')
+
+class BankAccountStatusModuleTestCase(TestCase):
+    def setUp(self):
+        fake_user = User.objects.create_user('test_user', 'testemail@testemail.com', '1234')
+        self.client.login(username='test_user', password='1234')
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Test Bucket 1", "bucketDescription": "Test description 1"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/check-in/account", follow=True, data={"accountName": "Gringotts Wizarding Bank", "description": "An arcane, underground vault guarded by a dragon. Only opened by authorized goblins.",}
+        )
+
+    def test_check_in_2_page(self):
+        response = self.client.get('/dashboard/check-in/2')
+        self.assertContains(response, 'Gringotts Wizarding Bank')
+        self.assertContains(response, 'Today\'s Check-In Date:')
+        responseTwo = self.client.post(
+            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-08-01 00:00:00", "amount__1": "9000",}
+        )
+        self.assertEqual(BankAccountStatus.objects.count(),1)
+
+class CheckInThreeTestCase(TestCase):
+    def setUp(self):
+        fake_user = User.objects.create_user('test_user', 'testemail@testemail.com', '1234')
+        self.client.login(username='test_user', password='1234')
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Test Bucket 1", "bucketDescription": "Test description 1"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/check-in/account", follow=True, data={"accountName": "Gringotts Wizarding Bank", "description": "An arcane, underground vault guarded by a dragon. Only opened by authorized goblins.",}
+        )
+        responseThree = self.client.post(
+            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-07-01 00:00:00", "amount__1": "5000",}
+        )
+        responseFour = self.client.post(
+            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-08-01 00:00:00", "amount__1": "9000",}
+        )
+    
+    def test_bank_account_status_creation(self):
+        self.assertEqual(BankAccountStatus.objects.count(),2)
+    
+    def test_check_in_page_three_content(self):
+        response_check_in_3 = self.client.get('/dashboard/check-in/3')
+        self.assertContains(response_check_in_3, 'Your account balance changed')
+        self.assertContains(response_check_in_3, '4000.00')
+    
+    def test_page_three_form(self):
+        response = self.client.post(
+            "/dashboard/check-in/3", follow=True, data={'csrfmiddlewaretoken': ['TESTCONTENT123456'],   "addOrRemove__1": "4000",}
+        )
+        open('_test.html', 'wb+').write(response.content)
+        self.assertEqual(Transaction.objects.count(),1)
+        self.assertContains(response, 'Success')
