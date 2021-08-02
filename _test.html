@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>
-        Page not found
+        
+    Bucket Finance: Stock Information
+
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -79,12 +81,42 @@
       
 
       
-<h1>Page not found</h1>
 
-<p>This is not the page you were looking for.</p>
+<div class="default">
+  <h1>Step 2: Enter Account Balances</h1>
 
-<a href="#" class="btn btn-secondary" onclick="history.go(-1);return false;">&larr; Back</a>
+  <div class="container">
+    <div class="row justify-content-start">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+          <a class="btn btn-primary btn-lg" href="/dashboard/check-in/account" role="button">Add Bank Account</a>
+        </div>
+        
+    </div>
+      <form action = '' method="POST">
+        <input type="hidden" name="csrfmiddlewaretoken" value="6JxREAzGaC6YOa175ksv0nAfbUiXL0FIGgnDHLRBK5Pd3Whwit97ioR5ZCNTroWk">
+        
+        <div>
+          <h5><strong>Account Name:</strong> Gringotts Wizarding Bank</h5>
+          <p><strong>Last Check-In Date:</strong>None. Start your first check-in below by clicking &quot;Continue!&quot;</p>
 
+            <label for="date1">Today's Check-In Date:</label>
+            <input type="date" id="date__1" name="date__1">
+            <label for="">Balance as of this date:</label>
+            <input type="number" step="0.01" id="date__1" name="amount__1">
+        </br></br>
+        </div>
+        
+        <button>Submit</button>
+        <input type="submit" value="Submit">
+
+        
+        
+        
+      </form> 
+    </div>
+  </div>
+  
+</div>
 
 
     </div>
