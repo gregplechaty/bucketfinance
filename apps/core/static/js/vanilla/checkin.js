@@ -7,14 +7,11 @@ function sumColumn(elementList, inputType) {
         if (inputType === 'textContent' && elementList[i].textContent !== '') {
             sum = parseFloat(sum) + parseFloat(elementList[i].textContent);
         } else if (inputType === 'value'  && elementList[i].value !== '') {
+            console.log('value value...', elementList[i].value)
             sum = parseFloat(sum) + parseFloat(elementList[i].value);
         };
-        if (typeof sum !== "string") {
+         if (typeof sum === "number") {
             sum = sum.toFixed(2);
-        } else if (sum = '0.00') {
-            sum = 0.00;
-        } else {
-            sum = 'error';
         }
     };
     return sum;
@@ -26,7 +23,7 @@ function previousAmount() {
 }
 
 function addOrRemove() {
-    let elementList = document.querySelectorAll("input[name=addOrRemove]");
+    let elementList = document.querySelectorAll("input[sumCalc=addOrRemove]");
     document.querySelector("td[name=addOrRemoveSum]").textContent = sumColumn(elementList,'value');
 };
 
@@ -34,7 +31,7 @@ function newAmount() {
     let elementList = document.querySelectorAll("tbody");
     for (let row of elementList) {
         let lastAmount = row.querySelector("td[name=lastAmount]").textContent;
-        let addOrRemoveSum = row.querySelector("input[name=addOrRemove]").value;
+        let addOrRemoveSum = row.querySelector("input[sumCalc=addOrRemove]").value;
         (addOrRemoveSum === '' ? addOrRemoveSum = 0 : null)
         sum = parseFloat(lastAmount) + parseFloat(addOrRemoveSum);
         //console.log('lookiehere:', lastAmount, addOrRemoveSum, sum)
@@ -51,11 +48,29 @@ function newAmount() {
     resultRow.querySelector("td[name=newAmountSum]").textContent = sumFooter;
 };
 
+function submitShowHide() {
+    const balanceDifference = document.querySelector("#balanceDifference").textContent;
+    const addRemoveSum = document.querySelector("td[name=addOrRemoveSum]").textContent;
+    let submitButton = document.querySelector("#form_submit");
+    if (balanceDifference !== addRemoveSum && submitButton) {
+        submitButton.remove();
+    }
+    if (balanceDifference === addRemoveSum && !submitButton) {
+        console.log('now shoot, what do we do now?');
+        formNode = document.querySelector("form");
+        let input = document.createElement("input");
+        input.value = "Submit";
+        input.id = "form_submit";
+        input.type = "submit";
+        formNode.appendChild(input); // put it into the DOM
+    }
+}
 
 function render() {
     previousAmount();
     addOrRemove();
     newAmount();
+    submitShowHide();
 }
 
 render();

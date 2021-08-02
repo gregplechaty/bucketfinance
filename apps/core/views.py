@@ -7,6 +7,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import SuspiciousOperation
+from datetime import date
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
@@ -57,6 +58,7 @@ def bucket_amount_sum(buckets):
 
 @login_required
 def create_bucket(request):
+    print('the method:', request.method, request)
     if request.method == 'POST':
         form = AddBucket(request.POST)
         print('Here is the request post:', request.POST)
@@ -101,10 +103,13 @@ def delete_bucket(request, bucket_id):
 
 @login_required
 def create_transaction(request, bucket_id):
+    print('the method:', request.method, request)
     if request.method == 'POST':
+        print('request is a post')
         bucket = Bucket.objects.get(id=bucket_id)
         form = AddTransaction(request.POST)
         if form.is_valid():
+            print('Form is valid')
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.bucket = bucket
@@ -162,7 +167,6 @@ def monthly_check_in_1(request):
 ###############################################################################################
 
 def get_bank_account_info(request):
-    # Getting user's bank accounts
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
     ## Here we add last status check-in to the account info
@@ -173,9 +177,6 @@ def get_bank_account_info(request):
         else:
             account.last_check_in_date = account_status[0].status_date
             account.newest_amount = account_status[0].amount
-        
-            
-    #print('array for bank_account_last_check_in_date', bank_account_last_check_in_date)
     return accounts
 
 def get_bank_account_info_previous(request):
@@ -197,8 +198,6 @@ def get_bank_account_info_previous(request):
 def monthly_check_in_2(request):
     print('------------view: monthly_check_in_2:')
     if request.method == 'POST':
-        print('Working on Check-In-POST...')
-        print("-----here's the post request:", request.POST)
         account_status_array = create_account_status_array(request)
         save_account_status(account_status_array)
         return redirect('pages/month_check_in_3.html')
@@ -227,20 +226,69 @@ def sum_of_all_accounts(accounts):
 def monthly_check_in_3(request):
     print('------------view: monthly_check_in_3:')
     if request.method == 'POST':
+        #TODO: Logic to reject bad add/remove amount
         print("-----here's the post request:", request.POST)
-        return redirect('/dashboard')
+        bucket_id_array = create_post_type_array(request)
+        transaction_array = create_array_from_form(request, bucket_id_array)
+        print('transaction_array', transaction_array)
+        save_check_in_transactions(request, transaction_array)
+        redirect('pages/month_check_in_3.html')
     #accounts = get_bank_account_info(request)
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
     context = {
         'user': request.user,
-        #'accounts': accounts,
         'account_balance_change': change_in_all_accounts_balance(request),
         'buckets_with_sum': buckets_with_sum,
         
     }
     return render(request, 'pages/month_check_in_3.html', context)
 
+@login_required
+def check_in_success(request):
+    context = {
+        'user': request.user,
+    }
+    return render(request, 'pages/check_in_success.html', context)
+
+def save_check_in_transactions(request, transaction_array):
+    for transaction in transaction_array:
+            new_transaction_form = AddTransaction()
+            new_transaction = new_transaction_form.save(commit=False)
+            new_transaction.user = request.user
+            bucket = Bucket.objects.get(id=transaction["bucket_id"])
+            new_transaction.bucket = bucket
+            new_transaction.amount = transaction["amount"]
+            new_transaction.transactionDate = date.today()
+            new_transaction.description = 'Check-In adjustment'
+            new_transaction.save()
+            print('Save of new_transaction successful!')
+
 ###################################################################################################
+
+def create_post_type_array(request):
+    post_type_array = []
+    i = 0
+    for item in request.POST:
+        idarray = item.split("__",1)
+        print('idarray:', idarray)
+        if i == 0:
+            i = i + 1
+        elif i != 0:
+            post_type_array.append(item.split("__",1)[1])
+        i = i + 1
+    return post_type_array
+
+def create_array_from_form(request, post_type_array):
+    new_array = []
+    for item in post_type_array:
+        input_amount = request.POST['addOrRemove__' + item]
+        if input_amount == '':
+            input_amount = 0
+        new_array.append({
+            'bucket_id': item,
+            'amount': input_amount
+        })
+    return new_array
 
 def create_account_status_array(request):
     account_status_array = []
@@ -280,7 +328,6 @@ def save_account_status(account_status_array):
 def create_account(request):
     if request.method == 'POST':
         form = AddBankAccount(request.POST)
-        #print('Here is the request post:', request.POST)
         if form.is_valid():
             bucket = form.save(commit=False)
             bucket.user = request.user

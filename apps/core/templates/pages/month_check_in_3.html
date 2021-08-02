@@ -5,9 +5,9 @@
 {% block content %}
 
 <div class="default">
-  <h1>Step 3: Your account balance changed by ${{ account_balance_change }}</h1>
+  <h1>Step 3: Your account balance changed by $<span id='balanceDifference'>{{ account_balance_change }}</span></h1>
   <p>Add or remove funds by this amount.</p>
-  <div class="container">
+  <div class="container" id="formContainer">
     <div class="row justify-content-start">
         <div class="col-lg-2 col-md-4 col-sm-12">
           <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Try Your Logic!</a>
@@ -16,7 +16,6 @@
     </div>
       <form action = '' method="POST">
         {% csrf_token %}
-
         <table class="table">
           <thead class="thead-light">
               <tr>
@@ -31,7 +30,7 @@
                       <tr>
                           <td>{{ bucket.bucketName }}</td>
                           <td name="lastAmount">{{ bucket.total_amount }}</td>
-                          <td><input type="number" name="addOrRemove" step="0.01" oninput="render()" required /></td>
+                          <td><input type="number" sumCalc="addOrRemove" name="addOrRemove__{{ bucket.id }}" step="0.01" oninput="render()" /></td>
                           <td name="newAmount">Calculated amount</td>
                       </tr>
 
@@ -46,14 +45,12 @@
             </tr>
           </tfoot>
         </table>
-        
+      <input id="form_submit" type="submit" value="Submit">
 
       </form> 
     </div>
     <div class="row justify-content-start">
-      <div class="col-lg-2 col-md-4 col-sm-12">
-        <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Continue</a>
-      </div>
+
   </div>
   </div>
   
