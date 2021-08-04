@@ -12,6 +12,7 @@ from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
 
+#################### VIEWS ####################
 
 def home(request):
     context = {
@@ -26,15 +27,13 @@ def about(request):
     }
     return render(request, 'pages/about.html', context)
 
-
+############################# HELPER FUNCTIONS #############################
 
 def get_buckets_transactions(request):
     buckets = Bucket.objects.filter(user=request.user, removedDate__isnull=True)
     transactions = Transaction.objects.filter(user=request.user, removedDate__isnull=True).order_by('-transactionDate')
     buckets_with_sum = bucket_amount_sum(buckets)
     return buckets, transactions, buckets_with_sum
-
-
 
 def bucket_amount_sum(buckets):
     dict_transactions_sums = {}
@@ -50,9 +49,7 @@ def bucket_amount_sum(buckets):
                 bucket.total_amount = 0
     return buckets
 
-
-###############################################################################################
-
+############################# STOCK INFO WIP #############################
 
 def stock_info(request):
     if 'stock_symbol' in request.GET and request.GET['stock_symbol']:
@@ -70,7 +67,6 @@ def stock_info(request):
     return render(request, 'pages/stock_info.html')
 
 def stock_chart_value_generation(dataset):
-    print('-------view: stock_chart_generation')
     x_values = ['2021-04-12', '2021-04-09', '2021-04-08', '2021-04-07', '2021-04-06']
     y_values = []
     for item in x_values:

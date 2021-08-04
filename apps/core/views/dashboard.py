@@ -13,7 +13,7 @@ from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
 from .shared import bucket_amount_sum, get_buckets_transactions
 
-
+#################### VIEWS ####################
 
 @login_required
 def dashboard(request):
@@ -25,6 +25,7 @@ def dashboard(request):
     }
     return render(request, 'pages/dashboard.html', context)
 
+#################### CRUD Operations ####################
 
 @login_required
 def create_bucket(request):
@@ -59,7 +60,6 @@ def edit_bucket(request, bucket_id):
 
 @login_required
 def delete_bucket(request, bucket_id):
-    print('------------view: delete_bucket:', bucket_id)
     bucket_to_delete = Bucket.objects.get(id=bucket_id)
     if bucket_to_delete.user != request.user:
         raise SuspiciousOperation("Attempted to delete different user's bucket")
@@ -67,7 +67,6 @@ def delete_bucket(request, bucket_id):
         bucket_to_delete.removedDate = datetime.datetime.now()
         bucket_to_delete.save()
         return redirect('/dashboard')
-
 
 @login_required
 def create_transaction(request, bucket_id):
@@ -111,7 +110,6 @@ def edit_transaction(request, transaction_id):
 
 @login_required
 def delete_transaction(request, transaction_id):
-    print('------------view: delete_bucket:', transaction_id)
     transaction_to_delete = Transaction.objects.get(id=transaction_id)
     if transaction_to_delete.user != request.user:
         raise SuspiciousOperation("Attempted to delete different user's transaction")
