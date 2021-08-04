@@ -7,7 +7,6 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import SuspiciousOperation
-from datetime import date
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus

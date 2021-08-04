@@ -1,4 +1,3 @@
-import datetime
 import requests
 import pygal
 from django.shortcuts import render, redirect
@@ -7,7 +6,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import SuspiciousOperation
-from datetime import date
+from django.utils import timezone
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
@@ -68,7 +67,7 @@ def save_check_in_transactions(request, transaction_array):
             bucket = Bucket.objects.get(id=transaction["bucket_id"])
             new_transaction.bucket = bucket
             new_transaction.amount = transaction["amount"]
-            new_transaction.transactionDate = date.today()
+            new_transaction.transactionDate = timezone.now()
             new_transaction.description = 'Check-In adjustment'
             new_transaction.save()
 

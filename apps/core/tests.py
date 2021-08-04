@@ -2,6 +2,7 @@ import requests
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from http import HTTPStatus
+from django.utils import timezone
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction
@@ -91,7 +92,7 @@ class BankAccountStatusModuleTestCase(TestCase):
         self.assertContains(response, 'Gringotts Wizarding Bank')
         self.assertContains(response, 'Today\'s Check-In Date:')
         responseTwo = self.client.post(
-            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-08-01 00:00:00", "amount__1": "9000",}
+            "/dashboard/check-in/2", follow=True, data={"date__1": timezone.now().replace(year=2021, month=8,day=1), "amount__1": "9000",}
         )
         self.assertEqual(BankAccountStatus.objects.count(),1)
 
@@ -106,10 +107,10 @@ class CheckInThreeTestCase(TestCase):
             "/dashboard/check-in/account", follow=True, data={"accountName": "Gringotts Wizarding Bank", "description": "An arcane, underground vault guarded by a dragon. Only opened by authorized goblins.",}
         )
         responseThree = self.client.post(
-            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-07-01 00:00:00", "amount__1": "5000",}
+            "/dashboard/check-in/2", follow=True, data={"date__1": timezone.now().replace(year=2021, month=7,day=1), "amount__1": "5000",}
         )
         responseFour = self.client.post(
-            "/dashboard/check-in/2", follow=True, data={"date__1": "2021-08-01 00:00:00", "amount__1": "9000",}
+            "/dashboard/check-in/2", follow=True, data={"date__1": timezone.now().replace(year=2021, month=7,day=1), "amount__1": "9000",}
         )
     
     def test_bank_account_status_creation(self):

@@ -1,6 +1,6 @@
 from django.db import models
 from apps.accounts.models import User
-# Create your models here.
+
 class Bucket(models.Model):
     # A very simple model example
     user = models.ForeignKey(
