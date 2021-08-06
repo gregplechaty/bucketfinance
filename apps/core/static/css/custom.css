@@ -1,6 +1,6 @@
 /* Color Pallette */
 :root {
-    --green-light: hsl(126, 71.4%, 91.8%);
+    --green-light: hsl(125.5, 100%, 95.7%);;
 
     --cream: hsl(138, 33%, 94%);
     --green-main: hsl(129, 37%, 36%);
@@ -23,6 +23,7 @@ body {
  /* unvisited link */
 .navbar a:link {
    color: var(--cream);
+   transition: color 120ms ease-in-out;
 }
 /* visited link  */
  .navbar a:visited {
@@ -73,6 +74,69 @@ body {
 
 
 
+
+.button {
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid;
+  border-radius: 0.6em;
+  cursor: pointer;
+  display: flex;
+  align-self: center;
+  line-height: 1;
+  margin: 20px;
+  padding: 1.2em 2.8em;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  transition: all 150ms ease-in-out;
+}
+
+.button__create {
+  border-color: #3498db;
+  color: var(--cream);
+  box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db;
+  margin: 5px;
+  
+}
+
+.button__edit {
+  border-color: var(--green-main);
+  color: black;
+  box-shadow: 0 0 40px 40px var(--green-main) inset, 0 0 0 0 var(--green-main);
+  padding: 0.5em;
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
+
+.button__edit:hover {
+  border-color: var(--green-main);
+  color: black;
+  box-shadow: 0 0 10px 0 var(--green-main) inset, 0 0 10px 4px var(--green-main);
+  text-decoration: none;
+}
+
+
+
+
+.button--noDec:hover {
+  text-decoration: none;
+}
+
+  .button:hover {
+    box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+    text-decoration: none;
+  }
+
+  
+
+
+
+
+
 .button-bucket {
     font-size: 1.2rem;
 }
@@ -86,3 +150,27 @@ body {
     margin-top: -10px;
     margin-bottom: -10px;
 }
+
+
+/***************** DASHBOARD *****************/
+.dashboard__header {
+  font-size: 3rem;
+}
+.dashboard__bucket {
+  width: 30rem;
+  font-size: 1.3rem;
+  background: var(--green-dark);
+  padding: 1rem;
+  border-radius: 1rem;
+  transition: all 130ms ease-in-out;
+}
+.dashboard__bucket:hover {
+  box-shadow: 0px 0px 8px 10px rgba(0,0,0,0.75);
+}
+
+
+.dashboard__bucket a {
+  text-decoration: none;
+  color: var(--cream);
+}
+

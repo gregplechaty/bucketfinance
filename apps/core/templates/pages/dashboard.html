@@ -7,23 +7,27 @@
 
 {% block content %}
 
+
 <div class="container">
-  <div class="row justify-content-start">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <h2>Hello {{ user.username }}</h2>
+      <div class="row justify-content-center">
+        <h2 class="dashboard__header">Hello {{ user.username }}</h2>
       </div>
-      <div class="col-lg-2 col-md-4 col-sm-12">
-        <a class="gen--button__standard" href="/dashboard/buckets" role="button">Create Bucket</a>
+      <div class="row justify-content-center">
+        <a class="button button__create" href="/dashboard/buckets" role="button">Create Bucket</a>
+        <a class="button button__create" href="/dashboard/check-in/1" role="button">Complete Monthly Check-in</a>
       </div>
-      <div class="col-lg-2 col-md-4 col-sm-12">
-        <a class="btn btn-primary btn-lg" href="/dashboard/check-in/1" role="button">Complete Monthly Check-in</a>
-      </div>
-  </div>
 {% for bucket in buckets_with_sum %}
-  <div class="row my-2">
-    <div class="col-md">
-      <div> 
-        <a class="btn btn-success col-8" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">{{ bucket.bucketName }}<span style='font-size:20px;'>☰</span></a>
+  <div>
+    <div class="row justify-content-center">
+      <div class="dashboard__bucket my-2">
+        <a class="row justify-content-between" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">
+          <div class="col-10">
+            {{ bucket.bucketName }}: <strong>${{ bucket.total_amount }}</strong>
+          </div>
+          <div class="col-2">
+            <span style='font-size:20px;'>☰</span>
+          </div>
+        </a>
       </div>
       <div class="collapse" id="bucket{{bucket.id}}">
       <div class="card card-body dashboardCard">
@@ -34,8 +38,9 @@
           </div>
           <!-- Button trigger modal -->
           <div class="col-4">
-            <div class="col-12 my-2">
-              <a class="btn btn-success btn-lg" href="buckets/edit/{{ bucket.id }}/" role="button">Edit Bucket</a>
+              <a class="button--noDec" href="buckets/edit/{{ bucket.id }}/">
+                <div class="button button__edit col-12 my-2">Edit Bucket</div>
+              </a>
             </div>
             <div class="col-12 my-2">
             <!-- Button trigger modal -->
@@ -48,7 +53,7 @@
         </p>
         </div>
         <div class="row my-2">
-          <a class="btn btn-primary col-8 my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
+          <a class="button button__create col-8 my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
           <div class="col-12 my-2">
 
             {% include "snippets/transactions.html" %}
