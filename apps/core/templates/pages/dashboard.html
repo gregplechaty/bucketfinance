@@ -37,23 +37,23 @@
             <p><i>{{ bucket.bucketDescription }}</i></p>
           </div>
           <!-- Button trigger modal -->
-          <div class="col-4">
+          <div class="col-sm-4 offset-md-1 col-md-3 button--noPadding">
               <a class="button--noDec" href="buckets/edit/{{ bucket.id }}/">
-                <div class="button button__edit col-12 my-2">Edit Bucket</div>
+                <div class="button button__edit my-2">Edit Bucket</div>
               </a>
             </div>
-            <div class="col-12 my-2">
+            <div class="offset-sm-8 col-sm-4 offset-md-9 col-md-3 button--noPadding">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
-              Delete Bucket
+            <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
+              Delete Bucket<i class="fas fa-trash-alt"></i>
             </button>
           </div>
           {% include "snippets/modal.html" %}
         </div>
         </p>
         </div>
-        <div class="row my-2">
-          <a class="button button__create col-8 my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
+        <div class="row my-2 justify-content-center">
+          <a class="button button__create my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
           <div class="col-12 my-2">
 
             {% include "snippets/transactions.html" %}
@@ -64,9 +64,8 @@
       </div>
     </div>
     </div>
-  </div>
+  
 {% endfor %}
-</div>
 </div>
 
       

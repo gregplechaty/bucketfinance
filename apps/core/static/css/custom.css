@@ -6,6 +6,7 @@
     --green-main: hsl(129, 37%, 36%);
     --green-dark: hsl(140, 35%, 22%);
     --black-text: hsl(220, 24%, 12%);
+    --red: hsl(0, 75.5%, 52%);
   }
 
 body {
@@ -89,7 +90,6 @@ body {
   padding: 1.2em 2.8em;
   text-decoration: none;
   text-align: center;
-  text-transform: uppercase;
   transition: all 150ms ease-in-out;
 }
 
@@ -98,8 +98,17 @@ body {
   color: var(--cream);
   box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db;
   margin: 5px;
-  
 }
+
+.button__create:hover {
+  box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+  text-decoration: none;
+}
+
+.button--noPadding {
+  padding: none;
+}
+
 
 .button__edit {
   border-color: var(--green-main);
@@ -108,7 +117,7 @@ body {
   padding: 0.5em;
   margin: auto;
   width: 50%;
-  border: 3px solid green;
+  border: 3px solid var(--green-main);
   padding: 10px;
 }
 
@@ -118,7 +127,23 @@ body {
   box-shadow: 0 0 10px 0 var(--green-main) inset, 0 0 10px 4px var(--green-main);
   text-decoration: none;
 }
+.button__delete {
+  border-color: var(--red);
+  color: black;
+  box-shadow: 0 0 40px 40px var(--red) inset, 0 0 0 0 var(--red);
+  padding: 0.5em;
+  margin: auto;
+  width: 50%;
+  border: 3px solid var(--red);
+  padding: 10px;
+}
 
+.button__delete:hover {
+  border-color: var(--red);
+  color: black;
+  box-shadow: 0 0 10px 0 var(--red) inset, 0 0 10px 4px var(--red);
+  text-decoration: none;
+}
 
 
 
@@ -126,10 +151,7 @@ body {
   text-decoration: none;
 }
 
-  .button:hover {
-    box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
-    text-decoration: none;
-  }
+
 
   
 
