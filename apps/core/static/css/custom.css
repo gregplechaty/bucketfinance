@@ -196,3 +196,43 @@ body {
   color: var(--cream);
 }
 
+
+
+/***************** CheckIn Table *****************/
+
+.checkInTable {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 1.1em;
+  min-width: 25rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.checkInTable thead tr th:first-child {
+  min-width: 10rem;
+}
+
+.checkInTable thead tr {
+  background-color: var(--green-main);
+  color: #ffffff;
+  text-align: left;
+}
+.checkInTable th,
+.checkInTable td {
+    padding: 12px 15px;
+}
+.checkInTable tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.checkInTable tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.checkInTable tbody tr:last-of-type {
+  border-bottom: 2px solid var(--green-main);
+}
+.checkInTable tbody tr.active-row {
+  font-weight: bold;
+  color: var(--green-main);
+}

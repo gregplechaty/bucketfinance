@@ -9,17 +9,13 @@
   <p>Add or remove funds by this amount.</p>
   <div class="container" id="formContainer">
     <div class="row justify-content-start">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-          <a class="btn btn-primary btn-lg" href="/dashboard/check-in/3" role="button">Try Your Logic!</a>
-        </div>
-        
     </div>
       <form action = '' method="POST">
         {% csrf_token %}
-        <table class="table">
-          <thead class="thead-light">
+        <table class="checkInTable">
+          <thead>
               <tr>
-                  <th scope="col">Bank Account</th>
+                  <th class="checkInTable__columnOne" scope="col">Bank Account</th>
                   <th scope="col">Current Amount</th>
                   <th scope="col">Add/Remove</th>
                   <th scope="col">New amount</th>
@@ -36,7 +32,7 @@
 
           </tbody>
           {% endfor %}
-          <tfoot class="thead-light">
+          <tfoot>
             <tr>
                 <td scope="col">Result</td>
                 <td scope="col" name="previousSum"></td>
