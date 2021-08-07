@@ -61,23 +61,18 @@ def check_in_success(request):
 
 def save_check_in_transactions(request, transaction_array):
     for transaction in transaction_array:
-            new_transaction_form = AddTransaction()
-            new_transaction = new_transaction_form.save(commit=False)
+            new_transaction = AddTransaction().save(commit=False)
             new_transaction.user = request.user
-            bucket = Bucket.objects.get(id=transaction["bucket_id"])
-            new_transaction.bucket = bucket
+            new_transaction.bucket = Bucket.objects.get(id=transaction["bucket_id"])
             new_transaction.amount = transaction["amount"]
             new_transaction.transactionDate = timezone.now()
             new_transaction.description = 'Check-In adjustment'
             new_transaction.save()
 
 
-
-
 def save_account_status(account_status_array):
     for account in account_status_array:
-            new_bank_account_status = AddBankAccountStatus()
-            account_status = new_bank_account_status.save(commit=False)
+            account_status = AddBankAccountStatus().save(commit=False)
             account_status.amount = account["amount"]
             account_status.status_date = account["date"]
             account_status.description = 'hardcoded description text. You have no control!'
