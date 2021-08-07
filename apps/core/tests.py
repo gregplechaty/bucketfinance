@@ -128,3 +128,39 @@ class CheckInThreeTestCase(TestCase):
         open('_test.html', 'wb+').write(response.content)
         self.assertEqual(Transaction.objects.count(),1)
         self.assertContains(response, 'Success')
+
+class DeleteBucketReallocateFundsTestCase(TestCase):
+    def setUp(self):
+        fake_user = User.objects.create_user('test_user', 'testemail@testemail.com', '1234')
+        self.client.login(username='test_user', password='1234')
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Test Bucket 1", "bucketDescription": "Emergency Fund"}
+        )
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Test Bucket 2", "bucketDescription": "slush fund"}
+        )
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Wedding Fund", "bucketDescription": "One-time fund. This will be deleted for this test."}
+        )
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Test Bucket 2", "bucketDescription": "Fun Money"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/transaction/1/", follow=True, data={"amount": "5000", "transactionDate": "01/01/2021", "description": "baseline emergency fund", "transaction_type": "subtract"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/transaction/1/", follow=True, data={"amount": "1000", "transactionDate": "02/03/2021", "description": "baseline slush", "transaction_type": "subtract"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/transaction/1/", follow=True, data={"amount": "30000", "transactionDate": "03/04/2021", "description": "baseline wedding", "transaction_type": "subtract"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/transaction/1/", follow=True, data={"amount": "400", "transactionDate": "04/21/2021", "description": "baseline fun money", "transaction_type": "subtract"}
+        )
+        responseTwo = self.client.post(
+            "/dashboard/transaction/1/", follow=True, data={"amount": "26000", "transactionDate": "05/15/2021", "description": "wedding expense", "transaction_type": "subtract"}
+        )
+    def test_setup(self):
+        self.assertEqual(Bucket.objects.count(),4)
+        self.assertEqual(Transaction.objects.count(),5)
+        
