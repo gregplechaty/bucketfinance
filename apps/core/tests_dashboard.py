@@ -10,7 +10,6 @@ from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction
 from apps.core.views.shared import get_buckets_transactions
 
-
 class GetBucketsTransactionsTestCase(TestCase):
     #Tests get_buckets_transactions function
     def setUp(self):
@@ -80,7 +79,7 @@ class GetBucketsTransactionsTestCase(TestCase):
 
 class DeleteBucketReallocateFundsTestCase(TestCase):
     def setUp(self):
-    # Every test needs access to the request factory.
+        # Every test needs access to the request factory.
         self.factory = RequestFactory()
         self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
         self.client.login(username='jacob', password='top_secret')
@@ -112,6 +111,27 @@ class DeleteBucketReallocateFundsTestCase(TestCase):
             "/dashboard/transaction/3/", follow=True, data={"amount": "26000", "transactionDate": "05/15/2021", "description": "wedding expense", "transaction_type": "subtract"}
         )
 
-    def text_delete_bucket_allocate_funds(self):
-        request = self.factory.get('dashboard/buckets/delete/3/')
+    def test_setup(self):
+        self.assertEqual(Bucket.objects.count(),4)
+        self.assertEqual(Transaction.objects.count(),5)
+
+    def test_delete_bucket_allocate_funds(self):
+        response = self.client.post(
+            "dashboard/buckets/delete/3/", follow=True, data={'csrfmiddlewaretoken': ['TESTCONTENT123456'],   "addOrRemove__1": "1000.00", "addOrRemove__2": "500.00", "addOrRemove__4": "2500.00",}
+        )
+        request = self.factory.get('/dashboard/')
         request.user = self.user
+        buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+        bucket_emergency_fund = None
+        bucket_slush_fund = None
+        bucket_fun_money = None
+        for bucket in buckets_with_sum:
+            if bucket.id == 1:
+                bucket_emergency_fund = bucket
+            elif bucket.id == 2:
+                bucket_slush_fund = bucket
+            elif bucket.id == 4:
+                bucket_fun_money = bucket
+        self.assertEqual(bucket_emergency_fund.total_amount,6000.00)
+        self.assertEqual(bucket_slush_fund.total_amount,1500.00)
+        self.assertEqual(bucket_fun_money.total_amount,2900.00)
