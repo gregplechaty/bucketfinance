@@ -57,11 +57,6 @@ class GetBucketsTransactionsTestCase(TestCase):
         request.user = self.user
         # Test my_view() as if it were deployed at /customer/details
         buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
-        #open('_test.html', 'wb+').write(response.content)
-        
-        
-        #bucket_emergency_fund = buckets_with_sum.objects.get(id=1)
-        #print(buckets, transactions, buckets_with_sum)
         bucket_emergency_fund = None
         bucket_wedding_fund = None
         for bucket in buckets_with_sum:
@@ -72,7 +67,6 @@ class GetBucketsTransactionsTestCase(TestCase):
                 bucket_wedding_fund = bucket
 
         #bucket_emergency_fund = buckets_with_sum.get(id__exact=1)
-        #print('BUCKET WITH SUM:', bucket_emergency_fund, bucket_emergency_fund.bucketName, ':', bucket_emergency_fund.total_amount)
         self.assertEqual(bucket_emergency_fund.total_amount,5000.00)
         self.assertEqual(bucket_wedding_fund.total_amount,4000.00)
   
