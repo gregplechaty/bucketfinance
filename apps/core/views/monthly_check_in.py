@@ -46,9 +46,10 @@ def monthly_check_in_3(request):
     context = {
         'user': request.user,
         'account_balance_change': change_in_all_accounts_balance(request),
-        'buckets_with_sum': buckets_with_sum,  
+        'buckets_with_sum': buckets_with_sum,
+        'header_message': 'Step 3: Your account balance changed by:',  
     }
-    return render(request, 'pages/month_check_in_3.html', context)
+    return render(request, 'pages/form_fund_allocation.html', context)
 
 @login_required
 def check_in_success(request):
@@ -66,7 +67,7 @@ def save_check_in_transactions(request, transaction_array):
             new_transaction.bucket = Bucket.objects.get(id=transaction["bucket_id"])
             new_transaction.amount = transaction["amount"]
             new_transaction.transactionDate = timezone.now()
-            new_transaction.description = 'Check-In adjustment'
+            new_transaction.description = transaction["description"]
             new_transaction.save()
 
 
@@ -75,7 +76,7 @@ def save_account_status(account_status_array):
             account_status = AddBankAccountStatus().save(commit=False)
             account_status.amount = account["amount"]
             account_status.status_date = account["date"]
-            account_status.description = 'hardcoded description text. You have no control!'
+            account_status.description = account["description"]
             current_bank_account = BankAccount.objects.get(id=int(account["account_id"]))
             account_status.bank_account = current_bank_account
             account_status.save()
@@ -142,7 +143,7 @@ def create_post_type_array(request):
     return post_type_array
 
 
-def create_array_from_form(request, post_type_array):
+def create_array_from_form(request, post_type_array, description='Check-In adjustment'):
     new_array = []
     for item in post_type_array:
         input_amount = request.POST['addOrRemove__' + item]
@@ -150,7 +151,8 @@ def create_array_from_form(request, post_type_array):
             input_amount = 0
         new_array.append({
             'bucket_id': item,
-            'amount': input_amount
+            'amount': input_amount,
+            'description': description,
         })
     return new_array
 
@@ -171,6 +173,7 @@ def create_account_status_array(request):
         account_status_array.append({
             'account_id': item,
             'date': request.POST['date__' + item],
-            'amount': request.POST['amount__' + item]
+            'amount': request.POST['amount__' + item],
+            'description': 'Account value as of this date'
         })
     return account_status_array

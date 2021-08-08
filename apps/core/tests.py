@@ -1,11 +1,14 @@
+from django.db.models.fields import NullBooleanField
 import requests
 from django.test import TestCase, Client
+from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from http import HTTPStatus
 from django.utils import timezone
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction
+from apps.core.views.shared import get_buckets_transactions
 
 class BucketModuleUnitTestCase(TestCase):
     def setUp(self):
