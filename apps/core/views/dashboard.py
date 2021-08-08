@@ -65,7 +65,6 @@ def delete_bucket(request, bucket_id):
     if bucket_to_delete.user != request.user:
         raise SuspiciousOperation("Attempted to delete different user's bucket")
     elif request.method == 'POST':
-        print(request.POST)
         #same functions from other check-in
         bucket_id_array = create_post_type_array(request)
         transaction_description = 'Reallocated from deleted bucket: ' + bucket_to_delete.bucketName
