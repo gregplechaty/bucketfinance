@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+    Bucket Finance: Stock Information
+{% endblock title %}
+{% block content %}
+
+<div class="default">
+  <h1>{{ header_message }} $<span id='balanceDifference'>{{ account_balance_change }}</span></h1>
+  <p>Add or remove funds by this amount.</p>
+  <div class="container" id="formContainer">
+    <div class="row justify-content-start">
+    </div>
+      {% include "snippets/form-fund-allocation.html" %}
+    </div>
+    <div class="row justify-content-start">
+
+  </div>
+  </div>
+  
+</div>
+{% endblock content %}

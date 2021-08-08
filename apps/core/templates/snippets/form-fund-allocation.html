@@ -1,0 +1,36 @@
+{% block content %}
+<form action = '' method="POST">
+    {% csrf_token %}
+    <table class="checkInTable">
+      <thead>
+          <tr>
+              <th class="checkInTable__columnOne" scope="col">Bank Account</th>
+              <th scope="col">Current Amount</th>
+              <th scope="col">Add/Remove</th>
+              <th scope="col">New amount</th>
+          </tr>
+      </thead>
+      {% for bucket in buckets_with_sum %}
+      <tbody>
+                  <tr>
+                      <td>{{ bucket.bucketName }}</td>
+                      <td name="lastAmount">{{ bucket.total_amount }}</td>
+                      <td><input type="number" sumCalc="addOrRemove" name="addOrRemove__{{ bucket.id }}" step="0.01" oninput="render()" /></td>
+                      <td name="newAmount">Calculated amount</td>
+                  </tr>
+
+      </tbody>
+      {% endfor %}
+      <tfoot>
+        <tr>
+            <td scope="col">Result</td>
+            <td scope="col" name="previousSum"></td>
+            <td scope="col" name="addOrRemoveSum"></td>
+            <td scope="col" name="newAmountSum">Sum new amounts</td>
+        </tr>
+      </tfoot>
+    </table>
+  <input id="form_submit" type="submit" value="Submit">
+
+  </form>
+{% endblock content %}

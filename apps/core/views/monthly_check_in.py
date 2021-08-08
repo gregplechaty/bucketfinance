@@ -46,9 +46,10 @@ def monthly_check_in_3(request):
     context = {
         'user': request.user,
         'account_balance_change': change_in_all_accounts_balance(request),
-        'buckets_with_sum': buckets_with_sum,  
+        'buckets_with_sum': buckets_with_sum,
+        'header_message': 'Step 3: Your account balance changed by:',  
     }
-    return render(request, 'pages/month_check_in_3.html', context)
+    return render(request, 'pages/form_fund_allocation.html', context)
 
 @login_required
 def check_in_success(request):
