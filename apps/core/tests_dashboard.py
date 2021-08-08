@@ -117,7 +117,7 @@ class DeleteBucketReallocateFundsTestCase(TestCase):
 
     def test_delete_bucket_allocate_funds(self):
         response = self.client.post(
-            "dashboard/buckets/delete/3/", follow=True, data={'csrfmiddlewaretoken': ['TESTCONTENT123456'],   "addOrRemove__1": "1000.00", "addOrRemove__2": "500.00", "addOrRemove__4": "2500.00",}
+            "/dashboard/buckets/delete/3/", follow=True, data={'csrfmiddlewaretoken': ['TESTCONTENT123456'],   "addOrRemove__1": "1000.00", "addOrRemove__2": "500.00", "addOrRemove__4": "2500.00",}
         )
         request = self.factory.get('/dashboard/')
         request.user = self.user

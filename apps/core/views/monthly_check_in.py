@@ -143,7 +143,7 @@ def create_post_type_array(request):
     return post_type_array
 
 
-def create_array_from_form(request, post_type_array):
+def create_array_from_form(request, post_type_array, description='Check-In adjustment'):
     new_array = []
     for item in post_type_array:
         input_amount = request.POST['addOrRemove__' + item]
@@ -152,7 +152,7 @@ def create_array_from_form(request, post_type_array):
         new_array.append({
             'bucket_id': item,
             'amount': input_amount,
-            'description': 'Check-In adjustment',
+            'description': description,
         })
     return new_array
 
