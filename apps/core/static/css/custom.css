@@ -98,6 +98,7 @@ body {
   color: var(--cream);
   box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db;
   margin: 5px;
+  font-size: 1rem;
 }
 
 .button__create:hover {
@@ -198,6 +199,21 @@ body {
 
 
 
+.accountCard {
+  width: 35rem;
+  font-size: 1.3rem;
+  background: rgba(134, 84, 54, 0.80);
+  padding: 1rem;
+  border-radius: 1rem;
+  transition: all 130ms ease-in-out;
+}
+.accountCard:hover {
+  box-shadow: 0px 0px 8px 10px rgba(0,0,0,0.75);
+}
+
+
+;
+
 /***************** CheckIn Table *****************/
 
 .checkInTable {
@@ -236,3 +252,48 @@ body {
   font-weight: bold;
   color: var(--green-main);
 }
+
+.submitButton {
+  display: block;
+  padding: 0;
+  width: 15rem;
+  background-color: none;
+  border: 1.3px solid var(--green-main);
+  font-size: 1.4rem;
+  border-radius: 1rem;
+  color: var(--green-main);
+  cursor: pointer;
+  outline: none;
+  text-align: center;
+  transition: background-color 130ms, color 130ms, font-size 130ms, width 130ms, border 130ms;
+}
+
+
+.submitButton:hover{
+  background-color: var(--green-main);
+  color: var(--cream);
+  width: 17rem;
+  font-size: 1.6rem;
+  }
+
+
+/***************** Form submission *****************
+This will require me to back out of the django form. TODO.
+
+
+
+.form_textInput {
+  width: 25rem;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.06);
+}
+
+.form_textInputLong {
+  width: 25rem;
+  resize: vertical;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 0;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.06);
+  height: 8rem;
+}
+*/

@@ -9,27 +9,26 @@
 
   <div class="container">
     <div class="row justify-content-start">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-          <a class="btn btn-primary btn-lg" href="/dashboard/check-in/account" role="button">Add Bank Account</a>
-        </div>
-        
+      <a class="button button__create" href="/dashboard/check-in/account" role="button">Add Bank Account</a>
     </div>
       <form action = '' method="POST">
         {% csrf_token %}
         {% for account in accounts %}
-        <div>
-          <h5><strong>Account Name:</strong> {{ account.accountName }}</h5>
-          <p><strong>Last Check-In Date:</strong>{{ account.last_check_in_date }}</p>
+        <div class="accountCard my-2">
+          <h4><strong>Account Name:</strong> {{ account.accountName }}</h4>
+          <p><strong>Last Check-In Date: </strong>{{ account.last_check_in_date|date:'F d, o'  }}</p>
 
             <label for="date{{ account.id }}">Today's Check-In Date:</label>
-            <input type="date" id="date__{{ account.id }}" name="date__{{ account.id }}">
+            <input type="date" id="date__{{ account.id }}" name="date__{{ account.id }}" required>
             <label for="">Balance as of this date:</label>
-            <input type="number" step="0.01" id="date__{{ account.id }}" name="amount__{{ account.id }}">
+            <input type="number" step="0.01" id="date__{{ account.id }}" name="amount__{{ account.id }}" required>
         </br></br>
         </div>
         {% endfor %}
-        <button>Submit</button>
-        <input type="submit" value="Submit">
+        <div>
+          <input class="submitButton" type="submit" value="Log These Values">
+        </div>
+        
 
         
         
