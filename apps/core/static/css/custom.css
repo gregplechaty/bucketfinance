@@ -1,6 +1,6 @@
 /* Color Pallette */
 :root {
-    --green-light: hsl(125.5, 100%, 95.7%);
+    --green-light: hsl(125.5, 100%, 95.7%);;
 
     --cream: hsl(138, 33%, 94%);
     --green-main: hsl(129, 37%, 36%);
@@ -179,30 +179,20 @@ body {
 .dashboard__header {
   font-size: 3rem;
 }
-.dashboard__bar {
-  width: 28rem;
+.dashboard__bucket {
+  width: 30rem;
   font-size: 1.3rem;
+  background: var(--green-dark);
   padding: 1rem;
-  margin: 1rem;
   border-radius: 1rem;
   transition: all 130ms ease-in-out;
 }
-
-.dashboard__bar--bucket {
-  background: var(--green-dark);
-}
-
-.dashboard__bar--account {
-  background: rgba(134, 84, 54, 0.80);
-}
-
-
-.dashboard__bar:hover {
+.dashboard__bucket:hover {
   box-shadow: 0px 0px 8px 10px rgba(0,0,0,0.75);
 }
 
 
-.dashboard__bar a {
+.dashboard__bucket a {
   text-decoration: none;
   color: var(--cream);
 }
@@ -307,26 +297,3 @@ This will require me to back out of the django form. TODO.
   height: 8rem;
 }
 */
-
-
-
-
-/***************** Card background *****************/
-.dashboard__display {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  max-width: 1400px;
-  
-}
-.dashboard__card {
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem;
-  background-color: hsl(125.5, 100%, 97.8%);
-
-}
-
-
-
-
