@@ -1,0 +1,53 @@
+{% block content %}
+<h4>{{ type }} with passed data</h4>
+
+     {% for item in buckets_with_sum %}
+  <div>
+    <div class="row justify-content-center">
+      <div class="dashboard__bar dashboard__bar--bucket my-2">
+        <a class="row justify-content-between" data-toggle="collapse" href="#{{ type|lower }}{{item.id}}" role="button" aria-expanded="false" aria-controls="{{ type|lower }}{{item.id}}">
+          <div class="col-10">
+            {{ item.bucketName }}: <strong>${{ item.total_amount }}</strong>
+          </div>
+          <div class="col-2">
+            <span style='font-size:20px;'>☰</span>
+          </div>
+        </a>
+      </div>
+      <div class="collapse" id="{{ type|lower }}{{item.id}}">
+      <div class="card card-body dashboardCard">
+        <div class="row">
+          <div class="col-8">
+            <h5><strong>Total Funds: ${{ item.total_amount }}</strong></h5>
+            <p><i>{{ item.bucketDescription }}</i></p>
+          </div>
+          <!-- Button trigger modal -->
+          <div class="col-sm-4 offset-md-1 col-md-3 button--noPadding">
+              <a class="button--noDec" href="{{ type|lower }}s/edit/{{ item.id }}/">
+                <div class="button button__edit my-2">Edit {{ type }}</div>
+              </a>
+              
+            <!-- Button trigger modal -->
+            <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ item.id }}">
+              Delete {{ type }}<i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          {% include "snippets/modal.html" %}
+        </div>
+        </p>
+        </div>
+        <div class="row my-2 justify-content-center">
+          <a class="button button__create my-2" href="/dashboard/transaction/{{ item.id }}" role="button">Add or Remove Funds</a>
+          <div class="col-12 my-2">
+
+            {% include "snippets/transactions.html" %}
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  
+{% endfor %}
+{% endblock content %}

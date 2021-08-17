@@ -1,7 +1,7 @@
 {% block content %}
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal{{ bucket.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -11,11 +11,11 @@
           </button>
         </div>
         <div class="modal-body">
-          Are you sure you want to delete {{ bucket.bucketName }}? This will remove all corresponding transactions associated.
+          Are you sure you want to delete {{ item.bucketName }}? This will remove all corresponding transactions associated.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="/dashboard/buckets/delete/{{ bucket.id }}/" role="button">Delete Bucket changes</a>
+          <a class="btn btn-primary" href="/dashboard/buckets/delete/{{ item.id }}/" role="button">Delete Bucket changes</a>
         </div>
       </div>
     </div>

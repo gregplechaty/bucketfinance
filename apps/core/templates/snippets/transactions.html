@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         {% for transaction in transactions %}
-            {% if transaction.bucket.id == bucket.id %}
+            {% if transaction.bucket.id == item.id %}
                 <tr>
                     <td>{{ transaction.transactionDate|date:"m/d/Y" }}</td>
                     <td>${{ transaction.amount }}</td>
