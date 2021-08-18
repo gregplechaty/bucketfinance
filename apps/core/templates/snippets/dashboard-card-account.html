@@ -1,0 +1,55 @@
+{% block content %}
+<div>
+    <h3>Accounts</h3>
+  {% for bucket in buckets_with_sum %}
+  <div>
+    <div class="row justify-content-center">
+      <div class="dashboard__bar dashboard__bar--account my-2">
+        <a class="row justify-content-between" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">
+          <div class="col-10">
+            {{ bucket.bucketName }}: <strong>${{ bucket.total_amount }}</strong>
+          </div>
+          <div class="col-2">
+            <span style='font-size:20px;'>☰</span>
+          </div>
+        </a>
+      </div>
+      <div class="collapse" id="bucket{{bucket.id}}">
+      <div class="card card-body dashboardCard">
+        <div class="row">
+          <div class="col-8">
+            <h5><strong>Total Funds: ${{ bucket.total_amount }}</strong></h5>
+            <p><i>{{ bucket.bucketDescription }}</i></p>
+          </div>
+          <!-- Button trigger modal -->
+          <div class="col-sm-4 offset-md-1 col-md-3 button--noPadding">
+              <a class="button--noDec" href="buckets/edit/{{ bucket.id }}/">
+                <div class="button button__edit my-2">Edit Bucket</div>
+              </a>
+            </div>
+            <div class="offset-sm-8 col-sm-4 offset-md-9 col-md-3 button--noPadding">
+            <!-- Button trigger modal -->
+            <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
+              Delete Bucket<i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          {% include "snippets/modal.html" %}
+        </div>
+        </p>
+        </div>
+        <div class="row my-2 justify-content-center">
+          <a class="button button__create my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
+          <div class="col-12 my-2">
+
+            {% include "snippets/transactions.html" %}
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  
+{% endfor %}
+</div>
+{% endblock content %}
