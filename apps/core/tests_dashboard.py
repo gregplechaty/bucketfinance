@@ -70,6 +70,28 @@ class GetBucketsTransactionsTestCase(TestCase):
         self.assertEqual(bucket_emergency_fund.total_amount,5000.00)
         self.assertEqual(bucket_wedding_fund.total_amount,4000.00)
   
+class GetAccountsTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
+        self.client.login(username='jacob', password='top_secret')
+        response = self.client.post(
+            "/dashboard/buckets", follow=True, data={"bucketName": "Emergency Fund", "bucketDescription": "Emergency Fund"}
+        )
+        
+    def test_setup(self):
+        response = self.client.post(
+            "/dashboard/accounts", follow=True, data={"name": "Chase Banking", "description": "Chase Banking account", "date": timezone.now().replace(year=2021, month=8,day=1), "amount": "5310",}
+        )
+        self.assertEqual(Bucket.objects.count(),1)
+        self.assertEqual(BankAccount.objects.count(),1)
+        self.assertEqual(BankAccountStatus.objects.count(),1)
+        self.assertContains(response, 'Chase Banking account')
+        self.assertContains(response, '5310')
+        
+
+    #Will add tests for new feature: initial account setup. 
+
 
 class DeleteBucketReallocateFundsTestCase(TestCase):
     def setUp(self):

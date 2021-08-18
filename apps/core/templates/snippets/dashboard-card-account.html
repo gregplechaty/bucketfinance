@@ -1,36 +1,39 @@
 {% block content %}
 <div>
     <h3>Accounts</h3>
-  {% for bucket in buckets_with_sum %}
+    <div class="row justify-content-start">
+      <a class="button button__create" href="{% url 'create_account' %}" role="button">Add Bank Account</a>
+    </div>
+  {% for account in accounts %}
   <div>
     <div class="row justify-content-center">
       <div class="dashboard__bar dashboard__bar--account my-2">
-        <a class="row justify-content-between" data-toggle="collapse" href="#bucket{{bucket.id}}" role="button" aria-expanded="false" aria-controls="bucket{{bucket.id}}">
+        <a class="row justify-content-between" data-toggle="collapse" href="#account{{account.id}}" role="button" aria-expanded="false" aria-controls="account{{account.id}}">
           <div class="col-10">
-            {{ bucket.bucketName }}: <strong>${{ bucket.total_amount }}</strong>
+            {{ account.accountName }}: <strong>${{ account.total_amount }}</strong>
           </div>
           <div class="col-2">
             <span style='font-size:20px;'>☰</span>
           </div>
         </a>
       </div>
-      <div class="collapse" id="bucket{{bucket.id}}">
+      <div class="collapse" id="account{{account.id}}">
       <div class="card card-body dashboardCard">
         <div class="row">
           <div class="col-8">
-            <h5><strong>Total Funds: ${{ bucket.total_amount }}</strong></h5>
-            <p><i>{{ bucket.bucketDescription }}</i></p>
+            <h5><strong>Total Funds: ${{ account.total_amount }}</strong></h5>
+            <p><i>{{ account.description }}</i></p>
           </div>
           <!-- Button trigger modal -->
           <div class="col-sm-4 offset-md-1 col-md-3 button--noPadding">
-              <a class="button--noDec" href="buckets/edit/{{ bucket.id }}/">
-                <div class="button button__edit my-2">Edit Bucket</div>
+              <a class="button--noDec" href="account/edit/{{ account.id }}/">
+                <div class="button button__edit my-2">Edit Account</div>
               </a>
             </div>
             <div class="offset-sm-8 col-sm-4 offset-md-9 col-md-3 button--noPadding">
             <!-- Button trigger modal -->
-            <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ bucket.id }}">
-              Delete Bucket<i class="fas fa-trash-alt"></i>
+            <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ account.id }}">
+              Delete Account<i class="fas fa-trash-alt"></i>
             </button>
           </div>
           {% include "snippets/modal.html" %}
@@ -38,10 +41,10 @@
         </p>
         </div>
         <div class="row my-2 justify-content-center">
-          <a class="button button__create my-2" href="/dashboard/transaction/{{ bucket.id }}" role="button">Add or Remove Funds</a>
+          <a class="button button__create my-2" href="/dashboard/transaction/{{ account.id }}" role="button">Add a Recent Check-in</a>
           <div class="col-12 my-2">
 
-            {% include "snippets/transactions.html" %}
+            {% include "snippets/account-statuses.html" %}
             
           </div>
 

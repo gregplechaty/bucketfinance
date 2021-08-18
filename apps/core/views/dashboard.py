@@ -19,10 +19,13 @@ from django.utils import timezone
 @login_required
 def dashboard(request):
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+    accounts, statuses = get_account_data(request)
     context = {
         'user': request.user,
         'transactions': transactions,
         'buckets_with_sum': buckets_with_sum,
+        'accounts': accounts,
+        'statuses': statuses
     }
     return render(request, 'pages/dashboard.html', context)
 
@@ -137,3 +140,44 @@ def delete_transaction(request, transaction_id):
         transaction_to_delete.removedDate = datetime.datetime.now()
         transaction_to_delete.save()
         return redirect('/dashboard')
+
+@login_required
+def create_account(request):
+    if request.method == 'POST':
+        if 1 == 1:
+            #Create Account
+            account = AddBankAccount().save(commit=False)
+            account.user = request.user
+            account.accountName = request.POST['name']
+            account.description = request.POST['description']
+            account.save()
+            #Create Account Status
+            account_status = AddBankAccountStatus().save(commit=False)
+            account_status.status_date = request.POST['date']
+            account_status.amount = request.POST['amount']
+            account_status.description = 'Funds in this account when baseline created'
+            account_status.bank_account = account
+            account_status.save()
+            return redirect('/dashboard')
+    else:
+        form = AddBucket()
+    context = {
+        'form': form,
+    }
+    return render(request, 'pages/create-account.html', context)
+
+@login_required
+def get_account_data(request):
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    accounts_statuses = BankAccountStatus.objects.filter(bank_account__in=accounts, removed_date__isnull=True).order_by('-status_date')
+    dict_statuses_sums = {}
+    for item in accounts_statuses:
+        if item.bank_account_id not in dict_statuses_sums:
+            dict_statuses_sums[item.bank_account_id] = 0
+        dict_statuses_sums[item.bank_account_id] += item.amount
+    for account in accounts:
+            if account.id in dict_statuses_sums:
+                account.total_amount = dict_statuses_sums[account.id]
+            else:
+                account.total_amount = 0
+    return accounts, accounts_statuses

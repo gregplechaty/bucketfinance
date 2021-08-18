@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+    Bucket Finance: Create Account
+{% endblock title %}
+{% block content %}
+
+<div class="default">
+  <h1>Add Account</h1>
+
+  <div class="container">
+      <form action = '' method="POST">
+        {% csrf_token %}
+        <div class="my-2">
+          <div>
+            <label for="name">Account Name</label>
+            <input type="text" name="name" required>
+          </div>
+          <div>
+            <label for="description">Account Description</label>
+            <input type="text" name="description" required>
+          </div>
+          <div>
+            <label for="date">Baseline Date:</label>
+            <input type="date" name="date" required>
+          </div>
+          <div>
+            <label for="number">Balance as of this date:</label>
+            <input type="number" step="0.01" name="amount" required>
+          </div>
+        </div>
+        <div>
+          <input class="submitButton" type="submit" value="Log These Values">
+      </form> 
+    </div>
+  </div>
+  
+</div>
+{% endblock content %}

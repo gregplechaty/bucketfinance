@@ -12,10 +12,11 @@ urlpatterns = [
     path('dashboard/transaction/<bucket_id>/', views.create_transaction, name='create_transaction'),
     path('dashboard/transaction/edit/<transaction_id>/', views.edit_transaction, name='edit_transaction'),
     path('dashboard/transaction/delete/<transaction_id>/', views.delete_transaction, name='delete_transaction'),
+    path('dashboard/accounts', views.create_account, name='create_account'),
     path('dashboard/check-in/1', views.monthly_check_in_1, name='monthly_check_in_1'),
     path('dashboard/check-in/2', views.monthly_check_in_2, name='monthly_check_in_2'),
     path('dashboard/check-in/3', views.monthly_check_in_3, name='monthly_check_in_3'),
-    path('dashboard/check-in/account', views.create_account, name='create_account'),
+    path('dashboard/check-in/account', views.create_account_2, name='create_account_2'),
     path('dashboard/check-in/success', views.check_in_success, name='check_in_success'),
     path('stock/', views.stock_info, name='stock_info'),
 ]

@@ -82,7 +82,7 @@ def save_account_status(account_status_array):
             account_status.save()
 
 @login_required
-def create_account(request):
+def create_account_2(request):
     if request.method == 'POST':
         form = AddBankAccount(request.POST)
         if form.is_valid():

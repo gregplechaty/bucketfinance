@@ -1,0 +1,24 @@
+{% block content %}
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Description</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for status in statuses %}
+            {% if status.bank_account.id == account.id %}
+                <tr>
+                    <td>{{ status.status_date|date:"m/d/Y" }}</td>
+                    <td>${{ status.amount }}</td>
+                    <td>{{ status.description }}</td>
+                </tr>
+            {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
