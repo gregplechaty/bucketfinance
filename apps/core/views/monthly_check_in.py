@@ -26,7 +26,7 @@ def monthly_check_in_2(request):
     if request.method == 'POST':
         account_status_array = create_account_status_array(request)
         save_account_status(account_status_array)
-        return redirect('pages/month_check_in_3.html')
+        return redirect('monthly_check_in_3')
     accounts = get_bank_account_info_two(request)
     context = {
         'user': request.user,
@@ -89,7 +89,7 @@ def create_account_2(request):
             bucket = form.save(commit=False)
             bucket.user = request.user
             bucket.save()
-            return redirect(monthly_check_in_2)
+            return redirect('monthly_check_in_2')
     else:
         form = AddBankAccount()
     context = {

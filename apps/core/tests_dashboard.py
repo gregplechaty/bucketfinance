@@ -88,10 +88,6 @@ class GetAccountsTestCase(TestCase):
         self.assertEqual(BankAccountStatus.objects.count(),1)
         self.assertContains(response, 'Chase Banking account')
         self.assertContains(response, '5310')
-        
-
-    #Will add tests for new feature: initial account setup. 
-
 
 class DeleteBucketReallocateFundsTestCase(TestCase):
     def setUp(self):

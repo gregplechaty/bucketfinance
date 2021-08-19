@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>
         
-    Bucket Finance Check In Successful
+    Bucket Finance: Stock Information
 
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,9 +79,55 @@
 
       
 
-<h1>Success! You deserve a job.</h1>
-<a href='/dashboard'>Return to Dashboard.</a>
-<p>Maybe print out a summary page in the future.</p>
+<div class="default">
+  <h1>Step 3: Your account balance changed by: $<span id='balanceDifference'>1500.00</span></h1>
+  <p>Add or remove funds by this amount.</p>
+  <div class="container" id="formContainer">
+    <div class="row justify-content-start">
+    </div>
+      
+<form action = '' method="POST">
+    <input type="hidden" name="csrfmiddlewaretoken" value="AiKE7RlB4EeYIGcF9dYtZvIq7qCqDQ9k9QDmNHZJufdxdapuDSQb3KUDw7bcyyBl">
+    <table class="checkInTable">
+      <thead>
+          <tr>
+              <th class="checkInTable__columnOne" scope="col">Bank Account</th>
+              <th scope="col">Current Amount</th>
+              <th scope="col">Add/Remove</th>
+              <th scope="col">New amount</th>
+          </tr>
+      </thead>
+      
+      <tbody>
+                  <tr>
+                      <td>Test Bucket 1</td>
+                      <td name="lastAmount">5000.00</td>
+                      <td><input type="number" sumCalc="addOrRemove" name="addOrRemove__1" step="0.01" oninput="render()" /></td>
+                      <td name="newAmount">Calculated amount</td>
+                  </tr>
+
+      </tbody>
+      
+      <tfoot>
+        <tr>
+            <td scope="col">Result</td>
+            <td scope="col" name="previousSum"></pages/month_check_in_3.htmtd>
+            <td scope="col" name="addOrRemoveSum"></td>
+            <td scope="col" name="newAmountSum">Sum new amounts</td>
+        </tr>
+      </tfoot>
+    </table>
+  <input class="submitButton" id="form_submit" type="submit" value="Submit">
+
+  </form>
+
+    </div>
+    <div class="row justify-content-start">
+
+  </div>
+  </div>
+  
+</div>
 
 
     </div>
