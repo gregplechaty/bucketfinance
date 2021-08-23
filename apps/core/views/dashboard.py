@@ -148,27 +148,32 @@ def delete_transaction(request, transaction_id):
 @login_required
 def create_account(request):
     if request.method == 'POST':
-        if 1 == 1:
-            #Create Account
-            account = AddBankAccount().save(commit=False)
-            account.user = request.user
-            account.accountName = request.POST['name']
-            account.description = request.POST['description']
-            account.save()
-            #Create Account Status
-            account_status = AddBankAccountStatus().save(commit=False)
-            account_status.status_date = request.POST['date']
-            account_status.amount = request.POST['amount']
-            account_status.description = 'Funds in this account when baseline created'
-            account_status.bank_account = account
-            account_status.save()
-            return redirect('/dashboard')
+        account = create_account_object(request)
+        account_status = create_account_status_object(request, account)
+        return redirect('/dashboard')
     else:
         form = AddBucket()
     context = {
         'form': form,
     }
     return render(request, 'pages/create-account.html', context)
+
+def create_account_object(request):
+    account = AddBankAccount().save(commit=False)
+    account.user = request.user
+    account.accountName = request.POST['name']
+    account.description = request.POST['description']
+    account.save()
+    return account
+
+def create_account_status_object(request, account):
+    account_status = AddBankAccountStatus().save(commit=False)
+    account_status.status_date = request.POST['date']
+    account_status.amount = request.POST['amount']
+    account_status.description = 'Funds in this account when baseline created'
+    account_status.bank_account = account
+    account_status.save()
+    return account_status
 
 @login_required
 def get_account_data(request):
@@ -177,3 +182,13 @@ def get_account_data(request):
     for account in accounts:
         account.current_balance = accounts_statuses.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[0].amount
     return accounts, accounts_statuses
+
+def buckets_adjust_to_account_change(request):
+    buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+    context = {
+        'user': request.user,
+        'account_balance_change': net_account_change,
+        'buckets_with_sum': buckets_with_sum,
+        'header_message': message,  
+    }
+    return render(request, 'pages/form_fund_allocation.html', context)
