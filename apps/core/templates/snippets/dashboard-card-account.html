@@ -1,6 +1,6 @@
 {% block content %}
 <div>
-    <h3>Accounts</h3>
+    <h3 class="accountCard--title">Accounts</h3>
     <div class="row justify-content-start">
       <a class="button button__create" href="{% url 'create_account' %}" role="button">Add Bank Account</a>
       <a class="button button__create" href="{% url 'monthly_check_in_2' %}" role="button">Check In All Accounts</a>
@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
       <div class="dashboard__bar dashboard__bar--account my-2">
         <a class="row justify-content-between" data-toggle="collapse" href="#account{{account.id}}" role="button" aria-expanded="false" aria-controls="account{{account.id}}">
-          <div class="col-10">
+          <div class="col-8">
             {{ account.accountName }}: <strong>${{ account.total_amount }}</strong>
           </div>
           <div class="col-2">
@@ -21,17 +21,17 @@
       <div class="collapse" id="account{{account.id}}">
       <div class="card card-body dashboardCard">
         <div class="row">
-          <div class="col-8">
+          <div class="col-sm-6 col-md-7">
             <h5><strong>Total Funds: ${{ account.total_amount }}</strong></h5>
             <p><i>{{ account.description }}</i></p>
           </div>
           <!-- Button trigger modal -->
-          <div class="col-sm-4 offset-md-1 col-md-3 button--noPadding">
+          <div class="col-sm-6 col-md-5 button--noPadding">
               <a class="button--noDec" href="account/edit/{{ account.id }}/">
                 <div class="button button__edit my-2">Edit Account</div>
               </a>
             </div>
-            <div class="offset-sm-8 col-sm-4 offset-md-9 col-md-3 button--noPadding">
+            <div class="offset-sm-6 col-sm-6 offset-md-7 col-md-5 button--noPadding">
             <!-- Button trigger modal -->
             <button type="button" class="button button__delete" data-toggle="modal" data-target="#exampleModal{{ account.id }}">
               Delete Account<i class="fas fa-trash-alt"></i>
