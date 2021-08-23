@@ -29,7 +29,7 @@ def dashboard(request):
     }
     return render(request, 'pages/dashboard.html', context)
 
-#################### CRUD Operations ####################
+#################### CRUD Operations: Buckets ####################
 
 @login_required
 def create_bucket(request):
@@ -91,6 +91,8 @@ def delete_bucket(request, bucket_id):
     return render(request, 'pages/form_fund_allocation.html', context)
         
 
+#################### CRUD Operations: Transactions ####################
+
 @login_required
 def create_transaction(request, bucket_id):
     if request.method == 'POST':
@@ -141,6 +143,8 @@ def delete_transaction(request, transaction_id):
         transaction_to_delete.save()
         return redirect('/dashboard')
 
+#################### CRUD Operations: Accounts ####################
+
 @login_required
 def create_account(request):
     if request.method == 'POST':
@@ -170,14 +174,6 @@ def create_account(request):
 def get_account_data(request):
     accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
     accounts_statuses = BankAccountStatus.objects.filter(bank_account__in=accounts, removed_date__isnull=True).order_by('-status_date')
-    dict_statuses_sums = {}
-    for item in accounts_statuses:
-        if item.bank_account_id not in dict_statuses_sums:
-            dict_statuses_sums[item.bank_account_id] = 0
-        dict_statuses_sums[item.bank_account_id] += item.amount
     for account in accounts:
-            if account.id in dict_statuses_sums:
-                account.total_amount = dict_statuses_sums[account.id]
-            else:
-                account.total_amount = 0
+        account.current_balance = accounts_statuses.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[0].amount
     return accounts, accounts_statuses
