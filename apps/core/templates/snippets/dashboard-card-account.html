@@ -3,7 +3,7 @@
     <h3 class="accountCard--title">Accounts</h3>
     <div class="row justify-content-start">
       <a class="button button__create" href="{% url 'create_account' %}" role="button">Add Bank Account</a>
-      <a class="button button__create" href="{% url 'monthly_check_in_2' %}" role="button">Check In All Accounts</a>
+      <a class="button button__create" href="{% url 'monthly_check_in_2' %}" role="button">Update Account Balances</a>
     </div>
   {% for account in accounts %}
   <div>
@@ -42,7 +42,6 @@
         </p>
         </div>
         <div class="row my-2 justify-content-center">
-          <a class="button button__create my-2" href="/dashboard/transaction/{{ account.id }}" role="button">Add a Recent Check-in</a>
           <div class="col-12 my-2">
 
             {% include "snippets/account-statuses.html" %}
