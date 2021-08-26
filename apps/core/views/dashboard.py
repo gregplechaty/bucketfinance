@@ -106,7 +106,7 @@ def create_transaction(request, bucket_id):
             if request.POST['transaction_type'] == 'subtract':
                 transaction.amount = transaction.amount * -1
             transaction.save()
-            return redirect('/dashboard')
+            return redirect('monthly_check_in_3')
     else:
         form = AddTransaction()
     context = {
