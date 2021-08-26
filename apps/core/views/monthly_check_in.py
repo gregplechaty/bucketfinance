@@ -105,9 +105,14 @@ def get_bank_account_info_two(request,record="current"):
     all_statuses_for_these_accounts = BankAccountStatus.objects.filter(bank_account__in=accounts).order_by('-status_date')
     ## Here we add last status check-in to the account info
     for account in accounts:
-        if record == 'previous':
+        account_statuses = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')
+        if record == 'previous' and len(account_statuses) > 1:
             account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[1:2]
         # defaults to 'top of stack' record
+        elif record == 'previous' and len(account_statuses) == 1:
+            account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[:1]
+            account_status[0].amount = 0
+            account_status[0].status_date = timezone.now().replace(year=1800, month=1,day=1)
         else:
             account_status = BankAccountStatus.objects.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[:1]
         if len(all_statuses_for_these_accounts) == 0:
