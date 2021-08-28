@@ -48,6 +48,14 @@ def bucket_amount_sum(buckets):
                 bucket.total_amount = 0
     return buckets
 
+@login_required
+def get_account_data(request):
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    accounts_statuses = BankAccountStatus.objects.filter(bank_account__in=accounts, removed_date__isnull=True).order_by('-status_date')
+    for account in accounts:
+        account.current_balance = accounts_statuses.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[0].amount
+    return accounts, accounts_statuses
+
 ############################# STOCK INFO WIP #############################
 
 def stock_info(request):

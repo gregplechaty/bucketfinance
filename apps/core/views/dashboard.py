@@ -10,8 +10,8 @@ from django.core.exceptions import SuspiciousOperation
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
-from .shared import bucket_amount_sum, get_buckets_transactions
-from .monthly_check_in import create_post_type_array, create_array_from_form, save_check_in_transactions
+from .shared import bucket_amount_sum, get_buckets_transactions, get_account_data
+from .monthly_check_in import create_post_type_array, create_array_from_form, save_check_in_transactions, difference_in_transactions_and_account_balances
 from django.utils import timezone
 
 #################### VIEWS ####################
@@ -20,12 +20,14 @@ from django.utils import timezone
 def dashboard(request):
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
     accounts, statuses = get_account_data(request)
+    #difference = difference_in_transactions_and_account_balances(request, buckets_with_sum, accounts)
     context = {
         'user': request.user,
         'transactions': transactions,
         'buckets_with_sum': buckets_with_sum,
         'accounts': accounts,
-        'statuses': statuses
+        'statuses': statuses,
+        #'difference': difference,
     }
     return render(request, 'pages/dashboard.html', context)
 
@@ -175,13 +177,7 @@ def create_account_status_object(request, account):
     account_status.save()
     return account_status
 
-@login_required
-def get_account_data(request):
-    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
-    accounts_statuses = BankAccountStatus.objects.filter(bank_account__in=accounts, removed_date__isnull=True).order_by('-status_date')
-    for account in accounts:
-        account.current_balance = accounts_statuses.filter(bank_account=account, removed_date__isnull=True).order_by('-status_date')[0].amount
-    return accounts, accounts_statuses
+
 
 def buckets_adjust_to_account_change(request):
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)

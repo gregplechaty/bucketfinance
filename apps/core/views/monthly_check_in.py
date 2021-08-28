@@ -10,7 +10,7 @@ from django.utils import timezone
 from apps.accounts.models import User
 from apps.core.models import Bucket, Transaction, BankAccount, BankAccountStatus
 from apps.core.forms import AddBucket, AddTransaction, AddBankAccount, AddBankAccountStatus
-from .shared import bucket_amount_sum, get_buckets_transactions
+from .shared import bucket_amount_sum, get_buckets_transactions, get_account_data
 
 #################### VIEWS ####################
 
@@ -43,11 +43,13 @@ def monthly_check_in_3(request):
         save_check_in_transactions(request, transaction_array)
         return redirect(check_in_success)
     buckets, transactions, buckets_with_sum = get_buckets_transactions(request)
+    accounts, statuses = get_account_data(request)
+    difference = difference_in_transactions_and_account_balances(request, buckets_with_sum, accounts)
     context = {
         'user': request.user,
-        'account_balance_change': change_in_all_accounts_balance(request),
+        'account_balance_change': difference, #change_in_all_accounts_balance(request),
         'buckets_with_sum': buckets_with_sum,
-        'header_message': 'Step 3: Your account balance changed by:',  
+        'header_message': 'Step 3: Your account balance and buckets are off by:',  
     }
     return render(request, 'pages/form_fund_allocation.html', context)
 
@@ -128,6 +130,17 @@ def change_in_all_accounts_balance(request):
     previous_account_info = get_bank_account_info_two(request, 'previous')
     change_in_all_accounts = sum_of_all_accounts(accounts) - sum_of_all_accounts(previous_account_info)
     return change_in_all_accounts
+
+def difference_in_transactions_and_account_balances(request, buckets_with_sum, accounts_with_sum):
+    accounts = BankAccount.objects.filter(user=request.user, removed_date__isnull=True)
+    account_sum = 0
+    for status in accounts_with_sum:
+        account_sum = account_sum + status.current_balance
+    bucket_sum = 0
+    for bucket in buckets_with_sum:
+        bucket_sum = bucket_sum + bucket.total_amount
+    difference = account_sum - bucket_sum
+    return difference
 
 def sum_of_all_accounts(accounts):
     sum = 0

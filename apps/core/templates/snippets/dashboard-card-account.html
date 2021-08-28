@@ -3,7 +3,7 @@
     <h3 class="accountCard--title">Accounts</h3>
     <div class="row justify-content-start">
       <a class="button button__create" href="{% url 'create_account' %}" role="button">Add Bank Account</a>
-      <a class="button button__create" href="{% url 'monthly_check_in_2' %}" role="button">Update Account Balances</a>
+      <a class="button button__create" href="{% url 'monthly_check_in_2' %}" role="button">Sync Accounts and Buckets</a>
     </div>
   {% for account in accounts %}
   <div>

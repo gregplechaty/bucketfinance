@@ -131,8 +131,8 @@ class CheckInThreeTestCase(TestCase):
     
     def test_check_in_page_three_content(self):
         response_check_in_3 = self.client.get('/dashboard/check-in/3')
-        self.assertContains(response_check_in_3, 'Your account balance changed')
-        self.assertContains(response_check_in_3, '4000.00')
+        self.assertContains(response_check_in_3, 'Add or remove funds from your buckets to match this amount.')
+        self.assertContains(response_check_in_3, '9000.00')
     
     def test_page_three_form(self):
         response = self.client.post(
@@ -172,7 +172,7 @@ class CheckInThreeWithExistingBankAccountsTestCase(TestCase):
         self.assertEqual(BankAccountStatus.objects.count(),2)
         self.assertEqual(Bucket.objects.count(),1)
         self.assertEqual(Transaction.objects.count(),1)
-        self.assertContains(response, 'Your account balance changed')
+        self.assertContains(response, 'Add or remove funds from your buckets to match this amount.')
         self.assertContains(response, '1500.00')
     
     def test_page_three_form(self):
